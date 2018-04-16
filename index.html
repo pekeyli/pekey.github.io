@@ -242,7 +242,9 @@
         
 
         
-          <p>本地运行SpagoBI时需要JDK1.8的运行环境。</p>
+          <p>本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。</p>
+<hr>
+<p>本地运行SpagoBI时需要JDK1.8的运行环境。</p>
 <hr>
 <p>表图引擎模块的action</p>
 <blockquote>
@@ -283,8 +285,9 @@
 <hr>
 <blockquote>
 <p>Servlet mapping specifies an unknown servlet name AdapterHTTP</p>
+<p>Servlet 2.3 jar not loaded</p>
 </blockquote>
-<p>Servlet 2.3 jar not loaded<br>在Java Resource 中找到对应jar包，然后exclude<br>不知道是否正确</p>
+<p>在Java Resource 中找到对应jar包，然后exclude<br>不知道是否正确</p>
 
         
       
@@ -324,7 +327,9 @@
         
 
         
-          <p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
+          <p>本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。</p>
+<hr>
+<p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
 <p>其他命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar cv0f spark-libs.jar -C $KYLIN_HOME/spark/jars/ .</span><br></pre></td></tr></table></figure></p>
 <hr>
 <p>如出现以下错误</p>
@@ -355,7 +360,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">项目总结-辽宁省水环境综合管理系统</a>
+          <a class="post-link" href="/2018/04/11/项目总结-水环境管理系统/">项目总结-水环境管理系统</a>
         
       </h1>
 
@@ -377,7 +382,7 @@
         
 
         
-          
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
         
       
     </div>
@@ -394,7 +399,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">项目总结-辽宁省渔业渔政数据中心BI子系统</a>
+          <a class="post-link" href="/2018/04/11/项目总结-BI系统/">项目总结-BI系统</a>
         
       </h1>
 
@@ -416,7 +421,7 @@
         
 
         
-          
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
         
       
     </div>
@@ -433,7 +438,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">项目总结-东网大数据平台OLAP系统</a>
+          <a class="post-link" href="/2018/04/11/项目总结-OLAP系统/">项目总结-OLAP系统</a>
         
       </h1>
 
@@ -455,7 +460,7 @@
         
 
         
-          
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
         
       
     </div>
@@ -472,7 +477,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          <a class="post-link" href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">项目总结-辽宁省离校未就业转换网站</a>
+          <a class="post-link" href="/2018/04/11/项目总结-离校未就业转换网站/">项目总结-离校未就业网站</a>
         
       </h1>
 
@@ -494,7 +499,7 @@
         
 
         
-          
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
         
       
     </div>
@@ -567,7 +572,7 @@
     
       
         
-          <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+          <a href="mailto:pekeyli@qq.com" class="iconfont icon-email" title="email"></a>
         
       
     
@@ -583,6 +588,10 @@
     
       
     
+      
+        
+          <a href="/PekeyLi" class="iconfont icon-weibo" title="weibo"></a>
+        
       
     
       

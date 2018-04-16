@@ -177,7 +177,9 @@
 
     <div class="post-content">
       
-        <p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
+        <p>本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。</p>
+<hr>
+<p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
 <p>其他命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar cv0f spark-libs.jar -C $KYLIN_HOME/spark/jars/ .</span><br></pre></td></tr></table></figure></p>
 <hr>
 <p>如出现以下错误</p>
@@ -198,22 +200,6 @@
     
       
       
-
-  <div class="post-copyright">
-    <p class="copyright-item">
-      <span>原文作者: </span>
-      <a href="http://yoursite.com">Pekey Li</a>
-    </p>
-    <p class="copyright-item">
-      <span>原文链接: </span>
-      <a href="http://yoursite.com/2018/04/11/Kylin2-0环境搭建/">http://yoursite.com/2018/04/11/Kylin2-0环境搭建/</a>
-    </p>
-    <p class="copyright-item">
-      <span>许可协议: </span>
-      
-      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
-    </p>
-  </div>
 
 
 
@@ -241,8 +227,8 @@
       </a>
     
     
-      <a class="next" href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">
-        <span class="next-text nav-default">项目总结-辽宁省水环境综合管理系统</span>
+      <a class="next" href="/2018/04/11/项目总结-水环境管理系统/">
+        <span class="next-text nav-default">项目总结-水环境管理系统</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
@@ -271,7 +257,7 @@
     
       
         
-          <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+          <a href="mailto:pekeyli@qq.com" class="iconfont icon-email" title="email"></a>
         
       
     
@@ -287,6 +273,10 @@
     
       
     
+      
+        
+          <a href="/PekeyLi" class="iconfont icon-weibo" title="weibo"></a>
+        
       
     
       
