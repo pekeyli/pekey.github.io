@@ -1,4 +1,661 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Pekey | Pekey的笔记本</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Pekey</h1><a id="logo" href="/.">Pekey</a><p class="description">Pekey的笔记本</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2018/04/16/环境搭建的常用命令/">环境搭建的常用命令</a></h1><div class="post-meta">2018-04-16</div><div class="post-content"><p>####关闭防火墙和SELinux</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Pekey">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://yoursite.com/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Pekey </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Pekey</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Pekey</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts">
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/16/环境搭建的常用命令/">集群环境搭建的常用命令</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-16
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h4 id="关闭防火墙和SELinux"><a href="#关闭防火墙和SELinux" class="headerlink" title="关闭防火墙和SELinux"></a>关闭防火墙和SELinux</h4><blockquote>
+<p><strong>关闭命令：</strong> service iptables stop<br><strong>永久关闭防火墙：</strong> chkconfig iptables off<br><strong>查看防火墙关闭状态:</strong>  service iptables status</p>
+</blockquote>
+<h4 id="无密码登录"><a href="#无密码登录" class="headerlink" title="无密码登录"></a>无密码登录</h4><blockquote>
+<p>ssh-keygen -t rsa<br>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>chmod 600 ~/.ssh/authorized_keys<br>ssh localhost</p>
+</blockquote>
+<h4 id="显示文件夹大小并排序"><a href="#显示文件夹大小并排序" class="headerlink" title="显示文件夹大小并排序"></a>显示文件夹大小并排序</h4><blockquote>
+<p>du -h –max-depth=1 ./  | sort -n</p>
+</blockquote>
+<h4 id="将旧版本的jdk升级为新版本"><a href="#将旧版本的jdk升级为新版本" class="headerlink" title="将旧版本的jdk升级为新版本"></a>将旧版本的jdk升级为新版本</h4><blockquote>
+<p>sudo update-alternatives –install /usr/bin/java java /opt/soft/jdk/bin/java 300<br>sudo update-alternatives –install /usr/bin/javac javac /opt/soft/jdk/bin/javac 300<br>sudo update-alternatives –config java</p>
+</blockquote>
+<h4 id="ecilpse访问的权限设置"><a href="#ecilpse访问的权限设置" class="headerlink" title="ecilpse访问的权限设置"></a>ecilpse访问的权限设置</h4><blockquote>
+<p>groupadd supergroup # 添加supergroup组<br>useradd -g supergroup hadoop # 添加hadoop用户到supergroup组<br>hadoop fs -chmod 777 /</p>
+</blockquote>
+<h4 id="查看系统版本"><a href="#查看系统版本" class="headerlink" title="查看系统版本"></a>查看系统版本</h4><blockquote>
+<p><strong>其他系列</strong> cat /proc/version<br><strong>redhat系列</strong> cat /etc/redhat-release</p>
+</blockquote>
+<h4 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h4><blockquote>
+<p><strong>centos 6</strong><br>vim /etc/sysconfig/network<br>hostname yourhostname<br><strong>centos 7</strong><br>hostnamectl set-hostname yourhostname</p>
+</blockquote>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
+<p>chmod -R 777 ./spark</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/SpagoBI5.2开发环境搭建/">SpagoBI5.2开发环境搭建</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>本地运行SpagoBI时需要JDK1.8的运行环境。</p>
+<hr>
+<p>表图引擎模块的action</p>
 <blockquote>
-<p><strong>关闭命令：</strong> service iptables stop<br><strong>永久关闭防火墙：</strong> chkconfig iptables off<br><strong>查看防火墙关闭状态:</strong>  service iptables status</p></div><p class="readmore"><a href="/2018/04/16/环境搭建的常用命令/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/SpagoBI5.2开发环境搭建/">SpagoBI5.2开发环境搭建</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/SpagoBI5.2开发环境搭建/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/Kylin2-0环境搭建/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">项目总结-辽宁省水环境综合管理系统</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">项目总结-辽宁省渔业渔政数据中心BI子系统</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">项目总结-东网大数据平台OLAP系统</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">项目总结-辽宁省离校未就业转换网站</a></h1><div class="post-meta">2018-04-11</div><p class="readmore"><a href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/04/02/Hello World/">Hello World</a></h1><div class="post-meta">2018-04-02</div><div class="post-content"><p>Hello World</p>
-</div><p class="readmore"><a href="/2018/04/02/Hello World/">阅读全文</a></p></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/16/环境搭建的常用命令/">环境搭建的常用命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/SpagoBI5.2开发环境搭建/">SpagoBI5.2开发环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">项目总结-辽宁省水环境综合管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">项目总结-辽宁省渔业渔政数据中心BI子系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">项目总结-东网大数据平台OLAP系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">项目总结-辽宁省离校未就业转换网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/02/Hello World/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.whereareyou.site/" title="老田的博客" target="_blank">老田的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Pekey.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+<p>Bichartengine/WEB-INF/conf/commons/actions.xml</p>
+</blockquote>
+<p>整个项目的Service</p>
+<blockquote>
+<p>Spagobi-core/src/it/eng/spagobi/wepp/service</p>
+</blockquote>
+<hr>
+<p>导入sql文件出错时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SET GLOBAL sql_mode = &apos;&apos;;   </span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.00 sec)   </span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">mysql&gt; exit;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>按照从SVN中导出的代码的Server.xml进行修改</p>
+<blockquote>
+<p>同时修改hibernate.cfg.xml<br>配置数据源 hibernate.cfg.xml (SpagoBI/src/main/resources)</p>
+</blockquote>
+<p>注意Server.xml中配置数据库时注意大小写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;GlobalNamingResources&gt;</span><br><span class="line">    &lt;!-- Editable user database that can also be used by</span><br><span class="line">         UserDatabaseRealm to authenticate users</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;Resource auth=&quot;Container&quot; description=&quot;User database that can be updated and saved&quot; factory=&quot;org.apache.catalina.users.MemoryUserDatabaseFactory&quot; name=&quot;UserDatabase&quot; pathname=&quot;conf/tomcat-users.xml&quot; type=&quot;org.apache.catalina.UserDatabase”/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Environment name=&quot;spagobi_resource_path&quot; type=&quot;java.lang.String&quot; value=&quot;C:\progetti\spagobi2.0\workspace\resources&quot;/&gt;</span><br><span class="line">    &lt;Environment name=&quot;spagobi_sso_class&quot; type=&quot;java.lang.String&quot; value=&quot;it.eng.spagobi.services.common.FakeSsoService&quot;/&gt;</span><br><span class="line">    &lt;Environment name=&quot;spagobi_service_url&quot; type=&quot;java.lang.String&quot; value=&quot;http://localhost:8080/SpagoBI&quot;/&gt;    </span><br><span class="line">    &lt;Environment name=&quot;spagobi_host_url&quot; type=&quot;java.lang.String&quot; value=&quot;http://localhost:8080&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Resource auth=&quot;Container&quot; factory=&quot;de.myfoo.commonj.work.FooWorkManagerFactory&quot; maxThreads=&quot;5&quot;</span><br><span class="line">          name=&quot;wm/SpagoWorkManager&quot; type=&quot;commonj.work.WorkManager&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Resource auth=&quot;Container&quot; driverClassName=&quot;com.mysql.jdbc.Driver&quot;</span><br><span class="line">          maxActive=&quot;20&quot; maxIdle=&quot;10&quot; maxWait=&quot;-1&quot; name=&quot;jdbc/foodmart&quot;</span><br><span class="line">          password=&quot;root&quot; type=&quot;javax.sql.DataSource&quot;</span><br><span class="line">          url=&quot;jdbc:mysql://localhost/foodmart&quot; username=&quot;root&quot;/&gt;          </span><br><span class="line"></span><br><span class="line">    &lt;Resource name=&quot;jdbc/spagobi&quot; auth=&quot;Container&quot;</span><br><span class="line">          type=&quot;javax.sql.DataSource&quot; driverClassName=&quot;com.mysql.jdbc.Driver&quot;</span><br><span class="line">          url=&quot;jdbc:mysql://localhost/spagobi&quot;</span><br><span class="line">          username=&quot;root&quot; password=&quot;root&quot; maxActive=&quot;20&quot; maxIdle=&quot;10&quot;</span><br><span class="line">          maxWait=&quot;-1&quot;/&gt;  </span><br><span class="line"></span><br><span class="line">  &lt;/GlobalNamingResources&gt;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>虽然代码很多url等都写入了配置文件，但<strong>server.xml</strong>中的<strong>host url</strong>还是需要手动修改</p>
+<hr>
+<p>记得将符合自己mysql版本的jar包放到tomcat的lib中</p>
+<hr>
+<blockquote>
+<p>Unsupported major.minor version 52.0</p>
+</blockquote>
+<p>这个错误不要把JRE更换到高版本，更换到高版本会报一个新的15.0错误，没用，而是应该修改<strong>web.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:web=&quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot; xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot; id=&quot;WebApp_ID&quot; version=&quot;3.0&quot; metadata-complete=&quot;true” &gt;</span><br></pre></td></tr></table></figure>
+<p>添加一句：metadata-complete=”true” 就搞定了，我猜想由于项目是原来的项目，web.xml是原来项目的，和原来的什么版本可能有冲突，具体的也不清楚了</p>
+<hr>
+<p>按照src中的whatiftemplate的替换一下，可以修正错误</p>
+<hr>
+<p>在部署过多项目，如果报内存溢出异常，则需要修改一下tomcat的设置</p>
+<blockquote>
+<p>-Xms256m -Xmx512m -XX:MaxNewSize=256m -XX:MaxPermSize=256m</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Servlet mapping specifies an unknown servlet name AdapterHTTP</p>
+</blockquote>
+<p>Servlet 2.3 jar not loaded<br>在Java Resource 中找到对应jar包，然后exclude<br>不知道是否正确</p>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
+<p>其他命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar cv0f spark-libs.jar -C $KYLIN_HOME/spark/jars/ .</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>如出现以下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Failed to load keystore type JKS with pathconf/.keystore due to /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">java.io.FileNotFoundException: /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">       at java.io.FileInputStream.open(Native Method)</span><br></pre></td></tr></table></figure>
+<p>则去掉tomcat下的https<br>在kylin内置tomcat的server.xml中里边有个对https的支持没启用的话 注释掉</p>
+<hr>
+<p>自从spark2.0.0发布之后，每次启动hive的时候，总会发现一个小问题，启动 hive –service metastore的时候，会报一个小BUG: 无法访问/lib/spark-assembly-<em>.jar<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex19hd8jj30nm02tt8o.jpg" alt=""><br>分析其源码架构，发现主要原因是：在/bin/hive文件中，有这样的命令：加载spark中相关的JAR包。<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex1dwnb4j30ir0410sq.jpg" alt=""><br>但是spark升级到spark2以后，原有lib目录下的大JAR包被分散成多个小JAR包，原来的spark-assembly-</em>.jar已经不存在，所以hive没有办法找到这个JAR包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">Failed with exceptionjava.io.IOException:java.lang.IllegalArgumentException:java.net.URISyntaxException: Relative path in absolute URI:$&#123;system:user.name&#125;</span><br><span class="line">Time taken: 0.193 seconds</span><br></pre></td></tr></table></figure>
+<p>解决办法：把下列system:删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;system:java.io.tmpdir&#125;/$&#123; system:user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
+<p>变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;java.io.tmpdir&#125;/$&#123; user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
+<hr>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">项目总结-辽宁省水环境综合管理系统</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">项目总结-辽宁省渔业渔政数据中心BI子系统</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">项目总结-东网大数据平台OLAP系统</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">项目总结-辽宁省离校未就业转换网站</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/02/Hello World/">Hello World</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-02
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>Hello World</p>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    
+    
+  </nav>
+
+
+          </div>
+          
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Pekey Li</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

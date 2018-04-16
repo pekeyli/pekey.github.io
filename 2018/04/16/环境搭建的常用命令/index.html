@@ -1,33 +1,381 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>环境搭建的常用命令 | Pekey</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">环境搭建的常用命令</h1><a id="logo" href="/.">Pekey</a><p class="description">Pekey的笔记本</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">环境搭建的常用命令</h1><div class="post-meta">Apr 16, 2018</div><div class="post-content"><p>####关闭防火墙和SELinux</p>
-<blockquote>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="集群环境搭建的常用命令"/>
+
+
+
+
+  <meta name="keywords" content="linux, Pekey" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Pekey">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/04/16/环境搭建的常用命令/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 集群环境搭建的常用命令 - Pekey </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Pekey</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Pekey</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          集群环境搭建的常用命令
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-16
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h4 id="关闭防火墙和SELinux"><a href="#关闭防火墙和SELinux" class="headerlink" title="关闭防火墙和SELinux"></a>关闭防火墙和SELinux</h4><blockquote>
 <p><strong>关闭命令：</strong> service iptables stop<br><strong>永久关闭防火墙：</strong> chkconfig iptables off<br><strong>查看防火墙关闭状态:</strong>  service iptables status</p>
 </blockquote>
-<p>####无密码登录</p>
-<blockquote>
+<h4 id="无密码登录"><a href="#无密码登录" class="headerlink" title="无密码登录"></a>无密码登录</h4><blockquote>
 <p>ssh-keygen -t rsa<br>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>chmod 600 ~/.ssh/authorized_keys<br>ssh localhost</p>
 </blockquote>
-<p>####显示文件夹大小并排序</p>
-<blockquote>
+<h4 id="显示文件夹大小并排序"><a href="#显示文件夹大小并排序" class="headerlink" title="显示文件夹大小并排序"></a>显示文件夹大小并排序</h4><blockquote>
 <p>du -h –max-depth=1 ./  | sort -n</p>
 </blockquote>
-<p>####将旧版本的jdk升级为新版本</p>
-<blockquote>
+<h4 id="将旧版本的jdk升级为新版本"><a href="#将旧版本的jdk升级为新版本" class="headerlink" title="将旧版本的jdk升级为新版本"></a>将旧版本的jdk升级为新版本</h4><blockquote>
 <p>sudo update-alternatives –install /usr/bin/java java /opt/soft/jdk/bin/java 300<br>sudo update-alternatives –install /usr/bin/javac javac /opt/soft/jdk/bin/javac 300<br>sudo update-alternatives –config java</p>
 </blockquote>
-<p>####ecilpse访问的权限设置</p>
-<blockquote>
+<h4 id="ecilpse访问的权限设置"><a href="#ecilpse访问的权限设置" class="headerlink" title="ecilpse访问的权限设置"></a>ecilpse访问的权限设置</h4><blockquote>
 <p>groupadd supergroup # 添加supergroup组<br>useradd -g supergroup hadoop # 添加hadoop用户到supergroup组<br>hadoop fs -chmod 777 /</p>
 </blockquote>
-<p>####查看系统版本</p>
-<blockquote>
+<h4 id="查看系统版本"><a href="#查看系统版本" class="headerlink" title="查看系统版本"></a>查看系统版本</h4><blockquote>
 <p><strong>其他系列</strong> cat /proc/version<br><strong>redhat系列</strong> cat /etc/redhat-release</p>
 </blockquote>
-<p>####修改hostname</p>
-<blockquote>
+<h4 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h4><blockquote>
 <p><strong>centos 6</strong><br>vim /etc/sysconfig/network<br>hostname yourhostname<br><strong>centos 7</strong><br>hostnamectl set-hostname yourhostname</p>
 </blockquote>
-<p>####其他</p>
-<blockquote>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
 <p>chmod -R 777 ./spark</p>
 </blockquote>
-</div><div class="tags"></div><div class="post-nav"><a class="next" href="/2018/04/11/SpagoBI5.2开发环境搭建/">SpagoBI5.2开发环境搭建</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/16/环境搭建的常用命令/">环境搭建的常用命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/SpagoBI5.2开发环境搭建/">SpagoBI5.2开发环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省水环境综合管理系统/">项目总结-辽宁省水环境综合管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省渔业渔政数据中心BI子系统/">项目总结-辽宁省渔业渔政数据中心BI子系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-东网大数据平台OLAP系统/">项目总结-东网大数据平台OLAP系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/项目总结-辽宁省离校未就业转换网站/">项目总结-辽宁省离校未就业转换网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/02/Hello World/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.whereareyou.site/" title="老田的博客" target="_blank">老田的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Pekey.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://yoursite.com">Pekey Li</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://yoursite.com/2018/04/16/环境搭建的常用命令/">http://yoursite.com/2018/04/16/环境搭建的常用命令/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/linux/">linux</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/04/11/SpagoBI5.2开发环境搭建/">
+        <span class="next-text nav-default">SpagoBI5.2开发环境搭建</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Pekey Li</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>
