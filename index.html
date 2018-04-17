@@ -157,6 +157,207 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2018/04/17/Spark-Java-API/">Spark Java API</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-17
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h3 id="RDD如何创建"><a href="#RDD如何创建" class="headerlink" title="RDD如何创建"></a>RDD如何创建</h3><p>　　　　<br>首先创建JavaSparkContext对象实例sc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JavaSparkContext  sc = new JavaSparkContext(&quot;local&quot;,&quot;SparkTest&quot;);</span><br></pre></td></tr></table></figure>
+<p>接受2个参数：<br>第一个参数表示运行方式（local、yarn-client、yarn-standalone等）<br>第二个参数表示应用名字</p>
+<blockquote>
+<p>直接从集合转化 <code>sc.parallelize(List(1,2,3,4,5,6,7,8,9,10))</code><br>从HDFS文件转化  <code>sc.textFile(&quot;hdfs://&quot;)</code><br>从本地文件转化  <code>sc.textFile(&quot;file:/&quot;)</code></p>
+</blockquote>
+<p>下面例子中list2就是根据data2List生成的一个RDD</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list1 = new ArrayList&lt;String&gt;();</span><br><span class="line">list1.add(&quot;11,12,13,14,15&quot;);</span><br><span class="line">list1.add(&quot;aa,bb,cc,dd,ee&quot;);</span><br><span class="line">JavaRDD&lt;String&gt; list2 = sc.parallelize(list1);</span><br></pre></td></tr></table></figure>
+<h3 id="常用算子"><a href="#常用算子" class="headerlink" title="常用算子"></a>常用算子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">JavaRDD&lt;String []&gt; rdd = list2.map(</span><br><span class="line">    new Function&lt;String, String []&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public String [] call(String arg0) throws Exception &#123;</span><br><span class="line">            return arg0.split(&quot;,&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line">System.out.println(Util.printAList(rdd.collect()));</span><br></pre></td></tr></table></figure>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/17/Hbase环境搭建/">Hbase环境搭建</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-17
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h3 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h3><ul>
+<li>hbase-env.sh</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/home/grid/jdk1.7.0_75  </span><br><span class="line">export HBASE_HOME=/home/grid/hbase  </span><br><span class="line">export HBASE_LOG_DIR=/tmp/grid/logs  </span><br><span class="line">export HBASE_MANAGES_ZK=true</span><br></pre></td></tr></table></figure>
+<ul>
+<li>hbase-site.xml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;  </span><br><span class="line">    &lt;property&gt;  </span><br><span class="line">        &lt;name&gt;hbase.rootdir&lt;/name&gt; # 设置 hbase 数据库存放数据的目录  </span><br><span class="line">        &lt;value&gt;hdfs://master:9000/hbase&lt;/value&gt;  </span><br><span class="line">    &lt;/property&gt;  </span><br><span class="line"></span><br><span class="line">    &lt;property&gt;  </span><br><span class="line">        &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;  # 打开 hbase 分布模式  </span><br><span class="line">        &lt;value&gt;true&lt;/value&gt;  </span><br><span class="line">    &lt;/property&gt;  </span><br><span class="line"></span><br><span class="line">    &lt;property&gt;  </span><br><span class="line">        &lt;name&gt;hbase.master&lt;/name&gt; # 指定 hbase 集群主控节点  </span><br><span class="line">        &lt;value&gt;master:60000&lt;/value&gt;  </span><br><span class="line">    &lt;/property&gt;  </span><br><span class="line"></span><br><span class="line">    &lt;property&gt;  </span><br><span class="line">        &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;  </span><br><span class="line">        &lt;value&gt;master,slave1,slave2&lt;/value&gt; # 指定 zookeeper 集群节点名 , 因为是由 zookeeper 表决算法决定的  </span><br><span class="line">    &lt;/property&gt;  </span><br><span class="line"></span><br><span class="line">    &lt;property&gt;  </span><br><span class="line">        &lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt; # 指 zookeeper 集群 data 目录  </span><br><span class="line">        &lt;value&gt;/home/grid/hbase/zookeeper&lt;/value&gt;  </span><br><span class="line">    &lt;/property&gt;  </span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>regionservers</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">slave1  </span><br><span class="line">slave2</span><br></pre></td></tr></table></figure>
+<h3 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h3><ol>
+<li><p>启动Hadoop</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动Hbase</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看hbase启动情况<br>在master上有HQuorumPeer和HMaster进程，在slave1、slave2上有HQuorumPeer和HRegionServer进程</p>
+<blockquote>
+<p>通过浏览器验证：<a href="http://nodeh1:16010/master-status" target="_blank" rel="noopener">http://nodeh1:16010/master-status</a></p>
+</blockquote>
+</li>
+<li><p>命令行启动</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/grid/hbase/bin/hbase shell</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/17/Hadoop环境搭建/">Hadoop环境搭建</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-17
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h3 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h3><ul>
+<li><p>hadoop-env.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/java/jdk1.7.0_80</span><br><span class="line">export HADOOP_PREFIX=/opt/hadoop-2.6.4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://master:9000&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;/opt/hadoop-2.6.4/tmp&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：tmp目录需提前创建</p>
+</blockquote>
+</li>
+<li><p>hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;3&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>数据有三个副本</p>
+</blockquote>
+</li>
+<li><p>mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yarn-env.sh</p>
+<blockquote>
+<p>增加 JAVA_HOME 配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/java/jdk1.7.0_80</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- Site specific YARN configuration properties --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;nodeh1&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>slaves</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">master</span><br><span class="line">slave01</span><br><span class="line">slave02</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>master 即作为 NameNode 也作为 DataNode。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h3><ol>
+<li><p>格式化文件系统，在 master 上执行以下命令：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 NameNode 和 DateNode，执行 <code>start-dfs.sh</code>，使用 jps 命令查看进程。</p>
+</li>
+<li><p>输入地址：<a href="http://master:50070/" target="_blank" rel="noopener">http://master:50070/</a> 可以查看 NameNode 信息。</p>
+</li>
+<li><p>启动 ResourceManager 和 NodeManager，运行 <code>start-yarn.sh</code>, 使用 jps 查看  进程</p>
+</li>
+</ol>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar wordcount /data/input /data/output/result</span><br></pre></td></tr></table></figure>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2018/04/17/Spark环境搭建/">Spark环境搭建</a>
         
       </h1>
@@ -192,6 +393,7 @@
 <li>访问 <a href="http://master:4040" target="_blank" rel="noopener">http://master:4040</a>  浏览器访问SparkUI， 可以从SparkUI上查看一些 如环境变量、Job、Executor等信息。</li>
 </ol>
 </blockquote>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>计算 π 的近似值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$SPARK_HOME/bin/run-example SparkPi 2&gt;&amp;1 | grep &quot;Pi is roughly&quot;</span><br></pre></td></tr></table></figure></p>
 
         
       
@@ -315,6 +517,9 @@
 </blockquote>
 <h4 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h4><blockquote>
 <p><strong>centos 6</strong><br>vim /etc/sysconfig/network<br>hostname yourhostname<br><strong>centos 7</strong><br>hostnamectl set-hostname yourhostname</p>
+</blockquote>
+<h4 id="Spark-上传jar包"><a href="#Spark-上传jar包" class="headerlink" title="Spark 上传jar包"></a>Spark 上传jar包</h4><blockquote>
+<p>/opt/moudles/spark-1.6.1/bin/spark-submit –class SparkWordCount sparkStudy.jar  –master=spark://192.168.20.171:7077</p>
 </blockquote>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
 <p>chmod -R 777 ./spark</p>
@@ -549,129 +754,16 @@
   </article>
 
     
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/项目总结-OLAP系统/">项目总结-OLAP系统</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
-        </span>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/项目总结-离校未就业转换网站/">项目总结-离校未就业网站</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
-        </span>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/02/Hello World/">Hello World</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-02
-        </span>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <p>Hello World</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
     
+    
+      <a class="next" href="/page/2/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
     
   </nav>
 

@@ -177,7 +177,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Spark-上传jar包"><span class="toc-text">Spark 上传jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
     </div>
   </div>
 
@@ -204,6 +204,9 @@
 </blockquote>
 <h4 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h4><blockquote>
 <p><strong>centos 6</strong><br>vim /etc/sysconfig/network<br>hostname yourhostname<br><strong>centos 7</strong><br>hostnamectl set-hostname yourhostname</p>
+</blockquote>
+<h4 id="Spark-上传jar包"><a href="#Spark-上传jar包" class="headerlink" title="Spark 上传jar包"></a>Spark 上传jar包</h4><blockquote>
+<p>/opt/moudles/spark-1.6.1/bin/spark-submit –class SparkWordCount sparkStudy.jar  –master=spark://192.168.20.171:7077</p>
 </blockquote>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
 <p>chmod -R 777 ./spark</p>
