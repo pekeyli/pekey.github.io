@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Hive环境搭建"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Pekey">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/04/18/Hive环境搭建/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "qjhxkQG6FwXDocEOjCFjSJXX-gzGzoHsz",
+      appKey: "l9zmzMJqV7WdUXj4PbIGEAzb"
+    });
+  </script>
+
+
+
+
+
+    <title> Hive环境搭建 - Pekey </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Pekey</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Pekey</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Hive环境搭建
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-18
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/18/Hive环境搭建/"
+             data-title="Hive环境搭建">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql安装"><span class="toc-text">Mysql安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-is-running-but-PID-file-could-not-be-found"><span class="toc-text">MySQL is running but PID file could not be found</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysqld：未被识别的服务"><span class="toc-text">mysqld：未被识别的服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hive配置过程"><span class="toc-text">Hive配置过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iotmp"><span class="toc-text">iotmp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hive启动过程"><span class="toc-text">Hive启动过程</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Mysql安装"><a href="#Mysql安装" class="headerlink" title="Mysql安装"></a>Mysql安装</h2><p>关闭selinux 服务</p>
+<blockquote>
+<p>vim /etc/selinux/config<br>···<br>SELINUX=disabled<br>···</p>
+</blockquote>
+<p>卸载MariaDB</p>
+<blockquote>
+<p>查看当前安装的mariadb包： rpm -qa | grep mariadb<br>强制卸载： rpm -e –nodeps mariadb-libs-5.5.44-2.el7.centos.x86_64</p>
+</blockquote>
+<p>查看是否已经安装了MySQL</p>
+<blockquote>
+<p>rpm -qa | grep -i mysql<br>find / -name mysql</p>
+</blockquote>
+<p><del>删除分散mysql文件</del></p>
+<blockquote>
+<p><del>find / -name mysql / # whereis mysql</del></p>
+</blockquote>
+<p><del>删除配置文档</del></p>
+<blockquote>
+<p><del>rm -rf /etc/my.cnf</del></p>
+</blockquote>
+<p><del>再次查找机器是否安装mysql</del></p>
+<blockquote>
+<p><del>rpm -qa|grep -i mysql</del></p>
+</blockquote>
+<p>下载mysql5.6的安装包，并上传到服务器上</p>
+<blockquote>
+<p>[root@nodeh1 mysql]# ll<br>total 236180<br>-rw-r–r– 1 root root 20278972 Sep 22 15:41 MySQL-client-5.6.31-1.el7.x86_64.rpm<br>-rw-r–r– 1 root root  3529244 Sep 22 15:40 MySQL-devel-5.6.31-1.el7.x86_64.rpm<br>-rw-r–r– 1 root root 61732192 Sep 22 15:42 MySQL-server-5.6.31-1.el7.x86_64.rpm<br>-rw-r–r– 1 root root  2101912 Sep 22 15:42 MySQL-shared-5.6.31-1.el7.x86_64.rpm<br>-rw-r–r– 1 root root  2299648 Sep 22 15:40 MySQL-shared-compat-5.6.31-1.el7.x86_64.rpm<br>-rw-r–r– 1 root root 59644132 Sep 22 15:40 MySQL-test-5.6.31-1.el7.x86_64.rpm</p>
+</blockquote>
+<p>安装mysql 的安装包 注意顺序</p>
+<blockquote>
+<p>rpm -ivh MySQL-common-5.6.31-1.el7.x86_64.rpm<br>rpm -ivh MySQL-libs-5.6.31-1.el7.x86_64.rpm<br>rpm -ivh MySQL-client-5.6.31-1.el7.x86_64.rpm<br>rpm -ivh MySQL-server-5.6.31-1.el7.x86_64.rpm<br>rpm -ivh MySQL-devel-5.6.31-1.el7.x86_64.rpm</p>
+</blockquote>
+<p>使用rpm安装方式安装mysql，安装的路径如下：</p>
+<blockquote>
+<p>a 数据库目录<br>/var/lib/mysql/<br>b 配置文件<br>/usr/share/mysql(mysql.server命令及配置文件)<br>c 相关命令<br>/usr/bin(mysqladmin mysqldump等命令)<br>d 启动脚本<br>/etc/rc.d/init.d/(启动脚本文件mysql的目录)<br>e /etc/my.conf</p>
+</blockquote>
+<p>修改字符集和数据存储路径 配置/etc/my.cnf文件,设置如下键值来启用一起有用的选项和 UTF-8 字符集.</p>
+<blockquote>
+<p>cat /etc/my.cnf<br>[mysqld]<br>···<br>innodb_file_per_table<br>max_connections = 4096<br>collation-server = utf8_general_ci<br>character-set-server = utf8</p>
+</blockquote>
+<p>如果无法启动mysql服务</p>
+<blockquote>
+<p>chown mysql:mysql -R /var/lib/mysql</p>
+</blockquote>
+<p>如果遇到Access denied for user ‘root‘@’localhost’ (using password: YES)</p>
+<blockquote>
+<ol>
+<li>打开MySQL目录下的my.ini文件，在文件的最后添加一行“skip-grant-tables”，保存并关闭文件，重启服务。</li>
+<li>通过cmd行进入MySQL的bin目录，输入“mysql -u root -p”(不输入密码)，回车即可进入数据库;</li>
+<li>执行<code>mysql&gt; use mysql;</code>，使用mysql数据库;</li>
+<li><code>mysql&gt; update mysql.user set authentication_string=password(&quot;root&quot;) where user=&quot;root&quot; and Host = &quot;localhost&quot;;</code></li>
+<li>打开MySQL目录下的my.ini文件，删除最后一行的“skip-grant-tables”，保存并关闭文件</li>
+<li><code>mysql&gt; flush privileges;</code></li>
+<li><code>mysql&gt; quit;</code></li>
+</ol>
+</blockquote>
+<p>初始化MySQL及设置密码</p>
+<blockquote>
+<p>mysqld –initialize<br>会生成一个 root 账户密码，密码在log文件里<br>cat /var/log/mysqld.log<br><code>2017-04-13T10:00:37.229524Z 1 [Note] A temporary password is generated for root@localhost: %kWTz,Ml?3Zs</code></p>
+</blockquote>
+<blockquote>
+<p>systemctl start mysqld.service</p>
+</blockquote>
+<blockquote>
+<p>ALTER USER ‘root‘@’localhost’ IDENTIFIED BY ‘new_password’;</p>
+</blockquote>
+<p>设置mysql开机启动</p>
+<blockquote>
+<p>systemctl restart mysqld.service<br>systemctl enable mysqld.service</p>
+</blockquote>
+<p>设置mysql允许远程登陆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use mysql;</span><br><span class="line">mysql&gt; select host,user,password from user;</span><br><span class="line">| host                  | user | password                                  |</span><br><span class="line">| localhost             | root | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |</span><br><span class="line">| localhost.localdomain | root | *1237E2CE819C427B0D8174456DD83C47480D37E8 |</span><br><span class="line">| 127.0.0.1             | root | *1237E2CE819C427B0D8174456DD83C47480D37E8 |</span><br><span class="line">| ::1                   | root | *1237E2CE819C427B0D8174456DD83C47480D37E8 |</span><br><span class="line">mysql&gt; update user set host=&apos;%&apos; where user=&apos;root&apos; and host=&apos;localhost&apos;;</span><br><span class="line">mysql&gt; flush privileges;</span><br></pre></td></tr></table></figure>
+<h3 id="MySQL-is-running-but-PID-file-could-not-be-found"><a href="#MySQL-is-running-but-PID-file-could-not-be-found" class="headerlink" title="MySQL is running but PID file could not be found"></a>MySQL is running but PID file could not be found</h3><p>在Linux 中，当你启动或者重启 MySQL 时，报关于 PID file 的错误</p>
+<blockquote>
+<p>第一步：找到   mysql 中 data 目录下的 mysql-bin.index 文件，然后删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find / -name mysql-bin.index</span><br><span class="line">rm -rf  /phpstudy/data/mysql-bin.index</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>第二步：找到 并 kill 所有关于 mysql 或者 mysqld 的进程</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | grep mysql</span><br><span class="line">kill 进程号</span><br></pre></td></tr></table></figure>
+<p>可以在查看下进程中是否有 mysql 进程，确保 kill 干净，再看看 还有没有 mysql-bin.index文件（进程没杀死之前可能会生成）&lt;有必要&gt;</p>
+<blockquote>
+<p>命令：  service mysqld status</p>
+</blockquote>
+<hr>
+<h3 id="mysqld：未被识别的服务"><a href="#mysqld：未被识别的服务" class="headerlink" title="mysqld：未被识别的服务"></a>mysqld：未被识别的服务</h3><p>遇到这样的错误，是由于 /etc/init.d/  不存在 mysqld 这个命令（有的人安装完环境后存在，是因为你的安装包中有这样的命令将 mysql.server 文件 copy 到 /etc/init.d/ 下面了）</p>
+<blockquote>
+<p>1.首先你需要找到 mysql.server 文件，这个 和 mysqld 文件是一模一样的，只不过文件名不相同，执行命令：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find  /  -name mysql.server</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2.copy mysql.server 文件到 /etc/init.d/ 目录下，重命名文件为 mysqld，执行命令：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp  /phpstudy/mysql/support-files/mysql.server  /etc/init.d/mysqld</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>然后 再  <code>service mysqld status</code> 这个问题就解决了。</p>
+</blockquote>
+<h2 id="Hive配置过程"><a href="#Hive配置过程" class="headerlink" title="Hive配置过程"></a>Hive配置过程</h2><ul>
+<li><p>hive-site.xml</p>
+<blockquote>
+<p><code>cp $HIVE_HOME/conf/hive-default.xml.template $HIVE_HOME/conf/hive-site.xml</code></p>
+</blockquote>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;</span><br><span class="line">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;jdbc:mysql://127.0.0.1:3306/hive?createDatabaseIfNotExist=true&amp;amp;useSSL=false&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;new_password&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">    &lt;name&gt;hive.cli.print.current.db&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="iotmp"><a href="#iotmp" class="headerlink" title="iotmp"></a>iotmp</h3><blockquote>
+<p>建立临时目录<br>mkdir /home/grid/hive/iotmp<br>关联找到hive-site.xml里面，将iotmp的对应配置修改成真实地址。<br>${system:java.io.tmpdir} 改为真实物理路径。</p>
+</blockquote>
+<h2 id="Hive启动过程"><a href="#Hive启动过程" class="headerlink" title="Hive启动过程"></a>Hive启动过程</h2><blockquote>
+<p>nohup hive –service metastore -v &amp;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/04/17/Spark-Java-API/">
+        <span class="next-text nav-default">Spark Java API</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:pekeyli@qq.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="/PekeyLi" class="iconfont icon-weibo" title="weibo"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Pekey Li</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

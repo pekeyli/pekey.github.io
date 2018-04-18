@@ -201,6 +201,9 @@
         <h4 id="关闭防火墙和SELinux"><a href="#关闭防火墙和SELinux" class="headerlink" title="关闭防火墙和SELinux"></a>关闭防火墙和SELinux</h4><blockquote>
 <p><strong>关闭命令：</strong> service iptables stop<br><strong>永久关闭防火墙：</strong> chkconfig iptables off<br><strong>查看防火墙关闭状态:</strong>  service iptables status</p>
 </blockquote>
+<blockquote>
+<p>关闭selinux 服务<br>vim /etc/selinux/config<br>修改 SELINUX=disabled</p>
+</blockquote>
 <h4 id="无密码登录"><a href="#无密码登录" class="headerlink" title="无密码登录"></a>无密码登录</h4><blockquote>
 <p>ssh-keygen -t rsa<br>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>chmod 600 ~/.ssh/authorized_keys<br>ssh localhost</p>
 </blockquote>
@@ -252,9 +255,9 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/04/17/集群环境搭建过程遇到的问题/">
+      <a class="prev" href="/2018/04/17/Spark环境搭建/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">集群环境搭建过程遇到的问题</span>
+        <span class="prev-text nav-default">Spark环境搭建</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
