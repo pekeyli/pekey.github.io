@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Pekey">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "qjhxkQG6FwXDocEOjCFjSJXX-gzGzoHsz",
+      appKey: "l9zmzMJqV7WdUXj4PbIGEAzb"
+    });
+  </script>
+
+
+
+
+
+    <title> Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习 - Pekey </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Pekey</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Pekey</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-20
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/"
+             data-title="Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        <blockquote>
+<p>1.Join and 2.Aggregation – which will play an integral role during preprocessing as well in manipulating and consolidating data in a data warehouse.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>1.加入和2.聚合 - 在预处理过程中以及在数据仓库中操纵和合并数据时，它们将扮演不可或缺的角色。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>ETL systems move data from OLTP systems to a data warehouse, but they can also be used to move data from one data warehouse to another. A heterogeneous architecture for an ETL system is one that extracts data from multiple sources. The complexity of this architecture arises from the fact that data from more than one source must be merged, rather than from the fact that data may be formatted differently in the different sources.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>ETL系统将数据从OLTP系统移动到数据仓库，但它们也可用于将数据从一个数据仓库移动到另一个数据仓库。 ETL系统的异构体系结构是从多个来源提取数据的体系结构。这种体系结构的复杂性源于以下事实：来自多个源的数据必须合并，而不是来自不同来源的数据格式不同的事实。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Rather than replacing the information in the data warehouse with the data in the entire online transactional database, a join will match the primary key of the previously loaded record with its corresponding new record and then compare the data portions of the two records to determine if they’ve changed. In this way, only added, deleted, and altered records are updated, which significantly reduces elapsed time of database loads. By using a high-performance join for CDC, data warehouse updates can be performed with far greater efficiency.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>与其将数据仓库中的信息替换为整个在线交易数据库中的数据，联合会将先前加载的记录的主键与其相应的新记录相匹配，然后比较两个记录的数据部分以确定它们 已经改变了。 通过这种方式，只有添加，删除和更改的记录才会更新，这会显着减少数据库加载所花费的时间。 通过为CDC使用高性能连接，数据仓库更新可以以更高的效率执行。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/20/Kylin-Cube构建过程学习/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kylin Cube构建过程学习</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/">
+        <span class="next-text nav-default">Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:pekeyli@qq.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="/PekeyLi" class="iconfont icon-weibo" title="weibo"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Pekey Li</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

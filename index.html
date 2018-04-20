@@ -165,6 +165,232 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2018/04/20/Kylin-Cube构建过程学习/">Kylin Cube构建过程学习</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-20
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/20/Kylin-Cube构建过程学习/"
+             data-title="Kylin Cube构建过程学习">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>参考文献：<a href="https://blog.bcmeng.com%20https://blog.bcmeng.com" target="_blank" rel="noopener">https://blog.bcmeng.com</a></p>
+<hr>
+<p>MapReduce 计算引擎 批量计算Cube，其输入是Hive表，输出是HBase的KeyValue，整个构建过程主要包含以下6步：</p>
+<ol>
+<li>建立Hive的大宽表； （MapReduce计算）</li>
+<li>对需要字典编码的列计算列基数； （MapReduce计算）</li>
+<li>构建字典； （JobServer计算 or MapReduce计算）</li>
+<li>分层构建Cuboid； （MapReduce计算）</li>
+<li>将Cuboid转为HBase的KeyValue结构（HFile）； （MapReduce计算）</li>
+<li>元数据更新和垃圾回收。<h3 id="Cube-Build流程"><a href="#Cube-Build流程" class="headerlink" title="Cube Build流程"></a>Cube Build流程</h3></li>
+</ol>
+<p><strong>CubeController</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private JobInstance buildInternal(String cubeName, TSRange tsRange, SegmentRange segRange, Map&lt;Integer, Long&gt; sourcePartitionOffsetStart, Map&lt;Integer, Long&gt; sourcePartitionOffsetEnd, String buildType, boolean force) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String submitter = SecurityContextHolder.getContext().getAuthentication().getName();</span><br><span class="line">            CubeInstance cube = jobService.getCubeManager().getCube(cubeName);</span><br><span class="line"></span><br><span class="line">            if (cube == null) &#123;</span><br><span class="line">                throw new InternalErrorException(&quot;Cannot find cube &quot; + cubeName);</span><br><span class="line">            &#125;</span><br><span class="line">            return jobService.submitJob(cube, tsRange, segRange, sourcePartitionOffsetStart, sourcePartitionOffsetEnd,</span><br><span class="line">                    CubeBuildTypeEnum.valueOf(buildType), force, submitter);</span><br><span class="line">        &#125; catch (Throwable e) &#123;</span><br><span class="line">            logger.error(e.getLocalizedMessage(), e);</span><br><span class="line">            throw new InternalErrorException(e.getLocalizedMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>JobService</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ISource source = SourceFactory.getSource(cube);</span><br><span class="line">SourcePartition src = new SourcePartition(tsRange, segRange, sourcePartitionOffsetStart,</span><br><span class="line">        sourcePartitionOffsetEnd);</span><br><span class="line">src = source.enrichSourcePartitionBeforeBuild(cube, src);</span><br><span class="line">newSeg = getCubeManager().appendSegment(cube, src);</span><br><span class="line">job = EngineFactory.createBatchCubingJob(newSeg, submitter);</span><br></pre></td></tr></table></figure></p>
+<p><strong>EngineFactory</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/** Build a new cube segment, typically its time range appends to the end of current cube. */</span><br><span class="line">    public static DefaultChainedExecutable createBatchCubingJob(CubeSegment newSegment, String submitter) &#123;</span><br><span class="line">        return batchEngine(newSegment).createBatchCubingJob(newSegment, submitter);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>MRBatchCubingEngine2</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public DefaultChainedExecutable createBatchCubingJob(CubeSegment newSegment, String submitter) &#123;</span><br><span class="line">    return new BatchCubingJobBuilder2(newSegment, submitter).build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>BatchCubingJobBuilder2</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public CubingJob build() &#123;</span><br><span class="line">        logger.info(&quot;MR_V2 new job to BUILD segment &quot; + seg);</span><br><span class="line"></span><br><span class="line">        final CubingJob result = CubingJob.createBuildJob(seg, submitter, config);</span><br><span class="line">        final String jobId = result.getId();</span><br><span class="line">        final String cuboidRootPath = getCuboidRootPath(jobId);</span><br><span class="line"></span><br><span class="line">        // Phase 1: Create Flat Table &amp; Materialize Hive View in Lookup Tables</span><br><span class="line">        inputSide.addStepPhase1_CreateFlatTable(result);</span><br><span class="line"></span><br><span class="line">        // Phase 2: Build Dictionary</span><br><span class="line">        result.addTask(createFactDistinctColumnsStep(jobId));</span><br><span class="line"></span><br><span class="line">        if (isEnableUHCDictStep()) &#123;</span><br><span class="line">            result.addTask(createBuildUHCDictStep(jobId));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result.addTask(createBuildDictionaryStep(jobId));</span><br><span class="line">        result.addTask(createSaveStatisticsStep(jobId));</span><br><span class="line">        outputSide.addStepPhase2_BuildDictionary(result);</span><br><span class="line"></span><br><span class="line">        // Phase 3: Build Cube</span><br><span class="line">        addLayerCubingSteps(result, jobId, cuboidRootPath); // layer cubing, only selected algorithm will execute</span><br><span class="line">        addInMemCubingSteps(result, jobId, cuboidRootPath); // inmem cubing, only selected algorithm will execute</span><br><span class="line">        outputSide.addStepPhase3_BuildCube(result);</span><br><span class="line"></span><br><span class="line">        // Phase 4: Update Metadata &amp; Cleanup</span><br><span class="line">        result.addTask(createUpdateCubeInfoAfterBuildStep(jobId));</span><br><span class="line">        inputSide.addStepPhase4_Cleanup(result);</span><br><span class="line">        outputSide.addStepPhase4_Cleanup(result);</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Phase-1-Create-Flat-Table-amp-Materialize-Hive-View-in-Lookup-Tables"><a href="#Phase-1-Create-Flat-Table-amp-Materialize-Hive-View-in-Lookup-Tables" class="headerlink" title="Phase 1: Create Flat Table &amp; Materialize Hive View in Lookup Tables"></a>Phase 1: Create Flat Table &amp; Materialize Hive View in Lookup Tables</h4><p><strong>BatchCubingJobBuilder2</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// Phase 1: Create Flat Table &amp; Materialize Hive View in Lookup Tables</span><br><span class="line">inputSide.addStepPhase1_CreateFlatTable(result);</span><br></pre></td></tr></table></figure></p>
+<p><strong>HiveMRInput</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public void addStepPhase1_CreateFlatTable(DefaultChainedExecutable jobFlow) &#123;</span><br><span class="line">            final String cubeName = CubingExecutableUtil.getCubeName(jobFlow.getParams());</span><br><span class="line">            final KylinConfig cubeConfig = CubeManager.getInstance(KylinConfig.getInstanceFromEnv()).getCube(cubeName)</span><br><span class="line">                    .getConfig();</span><br><span class="line">            final String hiveInitStatements = JoinedFlatTable.generateHiveInitStatements(flatTableDatabase);</span><br><span class="line"></span><br><span class="line">            // create flat table first</span><br><span class="line">            addStepPhase1_DoCreateFlatTable(jobFlow);</span><br><span class="line"></span><br><span class="line">            // then count and redistribute</span><br><span class="line">            if (cubeConfig.isHiveRedistributeEnabled()) &#123;</span><br><span class="line">                jobFlow.addTask(createRedistributeFlatHiveTableStep(hiveInitStatements, cubeName));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // special for hive</span><br><span class="line">            addStepPhase1_DoMaterializeLookupTable(jobFlow);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private AbstractExecutable createFlatHiveTableStep(String hiveInitStatements, String jobWorkingDir,</span><br><span class="line">                String cubeName) &#123;</span><br><span class="line">            //from hive to hive</span><br><span class="line">            final String dropTableHql = JoinedFlatTable.generateDropTableStatement(flatDesc);</span><br><span class="line">            final String createTableHql = JoinedFlatTable.generateCreateTableStatement(flatDesc, jobWorkingDir);</span><br><span class="line">            String insertDataHqls = JoinedFlatTable.generateInsertDataStatement(flatDesc);</span><br><span class="line"></span><br><span class="line">            CreateFlatHiveTableStep step = new CreateFlatHiveTableStep();</span><br><span class="line">            step.setInitStatement(hiveInitStatements);</span><br><span class="line">            step.setCreateTableStatement(dropTableHql + createTableHql + insertDataHqls);</span><br><span class="line">            CubingExecutableUtil.setCubeName(cubeName, step.getParams());</span><br><span class="line">            step.setName(ExecutableConstants.STEP_NAME_CREATE_FLAT_HIVE_TABLE);</span><br><span class="line">            return step;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>CreateFlatHiveTableStep</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">protected void createFlatHiveTable(KylinConfig config) throws IOException &#123;</span><br><span class="line">        final HiveCmdBuilder hiveCmdBuilder = new HiveCmdBuilder();</span><br><span class="line">        hiveCmdBuilder.overwriteHiveProps(config.getHiveConfigOverride());</span><br><span class="line">        hiveCmdBuilder.addStatement(getInitStatement());</span><br><span class="line">        hiveCmdBuilder.addStatementWithRedistributeBy(getCreateTableStatement());</span><br><span class="line">        final String cmd = hiveCmdBuilder.toString();</span><br><span class="line"></span><br><span class="line">        stepLogger.log(&quot;Create and distribute table, cmd: &quot;);</span><br><span class="line">        stepLogger.log(cmd);</span><br><span class="line"></span><br><span class="line">        Pair&lt;Integer, String&gt; response = config.getCliCommandExecutor().execute(cmd, stepLogger);</span><br><span class="line">        Map&lt;String, String&gt; info = stepLogger.getInfo();</span><br><span class="line"></span><br><span class="line">        //get the flat Hive table size</span><br><span class="line">        Matcher matcher = HDFS_LOCATION.matcher(cmd);</span><br><span class="line">        if (matcher.find()) &#123;</span><br><span class="line">            String hiveFlatTableHdfsUrl = matcher.group(1);</span><br><span class="line">            long size = getFileSize(hiveFlatTableHdfsUrl);</span><br><span class="line">            info.put(ExecutableConstants.HDFS_BYTES_WRITTEN, &quot;&quot; + size);</span><br><span class="line">            logger.info(&quot;HDFS_Bytes_Writen: &quot; + size);</span><br><span class="line">        &#125;</span><br><span class="line">        getManager().addJobInfo(getId(), info);</span><br><span class="line">        if (response.getFirst() != 0) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;Failed to create flat hive table, error code &quot; + response.getFirst());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Phase-2-Build-Dictionary"><a href="#Phase-2-Build-Dictionary" class="headerlink" title="Phase 2: Build Dictionary"></a>Phase 2: Build Dictionary</h4><h4 id="Phase-3-Build-Cube"><a href="#Phase-3-Build-Cube" class="headerlink" title="Phase 3: Build Cube"></a>Phase 3: Build Cube</h4><p><strong>BatchCubingJobBuilder2</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Phase 3: Build Cube</span><br><span class="line">addLayerCubingSteps(result, jobId, cuboidRootPath); // layer cubing, only selected algorithm will execute</span><br><span class="line">addInMemCubingSteps(result, jobId, cuboidRootPath); // inmem cubing, only selected algorithm will execute</span><br><span class="line">outputSide.addStepPhase3_BuildCube(result);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">protected void addLayerCubingSteps(final CubingJob result, final String jobId, final String cuboidRootPath) &#123;</span><br><span class="line">    // Don&apos;t know statistics so that tree cuboid scheduler is not determined. Determine the maxLevel at runtime</span><br><span class="line">    final int maxLevel = CuboidUtil.getLongestDepth(seg.getCuboidScheduler().getAllCuboidIds());</span><br><span class="line">    // base cuboid step</span><br><span class="line">    result.addTask(createBaseCuboidStep(getCuboidOutputPathsByLevel(cuboidRootPath, 0), jobId));</span><br><span class="line">    // n dim cuboid steps</span><br><span class="line">    for (int i = 1; i &lt;= maxLevel; i++) &#123;</span><br><span class="line">        result.addTask(createNDimensionCuboidStep(getCuboidOutputPathsByLevel(cuboidRootPath, i - 1), getCuboidOutputPathsByLevel(cuboidRootPath, i), i, jobId));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private MapReduceExecutable createBaseCuboidStep(String cuboidOutputPath, String jobId) &#123;</span><br><span class="line">    // base cuboid job</span><br><span class="line">    MapReduceExecutable baseCuboidStep = new MapReduceExecutable();</span><br><span class="line"></span><br><span class="line">    StringBuilder cmd = new StringBuilder();</span><br><span class="line">    appendMapReduceParameters(cmd);</span><br><span class="line"></span><br><span class="line">    baseCuboidStep.setName(ExecutableConstants.STEP_NAME_BUILD_BASE_CUBOID);</span><br><span class="line"></span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_CUBE_NAME, seg.getRealization().getName());</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_SEGMENT_ID, seg.getUuid());</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_INPUT, &quot;FLAT_TABLE&quot;); // marks flat table input</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_OUTPUT, cuboidOutputPath);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_JOB_NAME, &quot;Kylin_Base_Cuboid_Builder_&quot; + seg.getRealization().getName());</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_LEVEL, &quot;0&quot;);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_CUBING_JOB_ID, jobId);</span><br><span class="line"></span><br><span class="line">    baseCuboidStep.setMapReduceParams(cmd.toString());</span><br><span class="line">    baseCuboidStep.setMapReduceJobClass(getBaseCuboidJob());</span><br><span class="line">    //        baseCuboidStep.setCounterSaveAs(CubingJob.SOURCE_RECORD_COUNT + &quot;,&quot; + CubingJob.SOURCE_SIZE_BYTES);</span><br><span class="line">    return baseCuboidStep;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private MapReduceExecutable createNDimensionCuboidStep(String parentPath, String outputPath, int level, String jobId) &#123;</span><br><span class="line">    // ND cuboid job</span><br><span class="line">    MapReduceExecutable ndCuboidStep = new MapReduceExecutable();</span><br><span class="line"></span><br><span class="line">    ndCuboidStep.setName(ExecutableConstants.STEP_NAME_BUILD_N_D_CUBOID + &quot; : level &quot; + level);</span><br><span class="line">    StringBuilder cmd = new StringBuilder();</span><br><span class="line"></span><br><span class="line">    appendMapReduceParameters(cmd);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_CUBE_NAME, seg.getRealization().getName());</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_SEGMENT_ID, seg.getUuid());</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_INPUT, parentPath);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_OUTPUT, outputPath);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_JOB_NAME, &quot;Kylin_ND-Cuboid_Builder_&quot; + seg.getRealization().getName() + &quot;_Step&quot;);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_LEVEL, &quot;&quot; + level);</span><br><span class="line">    appendExecCmdParameters(cmd, BatchConstants.ARG_CUBING_JOB_ID, jobId);</span><br><span class="line"></span><br><span class="line">    ndCuboidStep.setMapReduceParams(cmd.toString());</span><br><span class="line">    ndCuboidStep.setMapReduceJobClass(getNDCuboidJob());</span><br><span class="line">    return ndCuboidStep;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li><p>MR Cube Build</p>
+</li>
+<li><p>Spark Cube Build</p>
+</li>
+</ul>
+<blockquote>
+<p>The “by-layer” Cubing divides a big task into a couple steps, and each step bases on the previous step’s output, so it can reuse the previous calculation and also avoid calculating from very beginning when there is a failure in between. These makes it as a reliable algorithm. When moving to Spark, we decide to keep this algorithm, that’s why we call this feature as “By layer Spark Cubing”.<br>Figure 3 is the DAG of Cubing in Spark, it illustrates the process in detail: In “Stage 5”, Kylin uses a HiveContext to read the intermediate Hive table, and then do a “map” operation, which is an one to one map, to encode the origin values into K-V bytes. On complete Kylin gets an intermediate encoded RDD. In “Stage 6”, the intermediate RDD is aggregated with a “reduceByKey” operation to get RDD-1, which is the base cuboid. Nextly, do an “flatMap” (one to many map) on RDD-1, because the base cuboid has N children cuboids. And so on, all levels’ RDDs get calculated. These RDDs will be persisted to distributed file system on complete, but be cached in memory for next level’s calculation. When child be generated, it will be removed from cache.<br><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fqjhotn9owj30y00lsjuj.jpg" alt=""></p>
+</blockquote>
+<p>As we know, RDD (Resilient Distributed Dataset) is a basic concept in Spark. A collection of N-Dimension cuboids can be well described as an RDD, a N-Dimension Cube will have N+1 RDD. These RDDs have the parent/child relationship as the parent can be used to generate the children. With the parent RDD cached in memory, the child RDD’s generation can be much efficient than reading from disk. Figure 2 describes this process.</p>
+<h4 id="Phase-4-Update-Metadata-amp-Cleanup"><a href="#Phase-4-Update-Metadata-amp-Cleanup" class="headerlink" title="Phase 4: Update Metadata &amp; Cleanup"></a>Phase 4: Update Metadata &amp; Cleanup</h4><h3 id="其他代码"><a href="#其他代码" class="headerlink" title="其他代码"></a>其他代码</h3>
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/">Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-20
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/"
+             data-title="Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <blockquote>
+<p>1.Join and 2.Aggregation – which will play an integral role during preprocessing as well in manipulating and consolidating data in a data warehouse.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>1.加入和2.聚合 - 在预处理过程中以及在数据仓库中操纵和合并数据时，它们将扮演不可或缺的角色。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>ETL systems move data from OLTP systems to a data warehouse, but they can also be used to move data from one data warehouse to another. A heterogeneous architecture for an ETL system is one that extracts data from multiple sources. The complexity of this architecture arises from the fact that data from more than one source must be merged, rather than from the fact that data may be formatted differently in the different sources.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>ETL系统将数据从OLTP系统移动到数据仓库，但它们也可用于将数据从一个数据仓库移动到另一个数据仓库。 ETL系统的异构体系结构是从多个来源提取数据的体系结构。这种体系结构的复杂性源于以下事实：来自多个源的数据必须合并，而不是来自不同来源的数据格式不同的事实。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Rather than replacing the information in the data warehouse with the data in the entire online transactional database, a join will match the primary key of the previously loaded record with its corresponding new record and then compare the data portions of the two records to determine if they’ve changed. In this way, only added, deleted, and altered records are updated, which significantly reduces elapsed time of database loads. By using a high-performance join for CDC, data warehouse updates can be performed with far greater efficiency.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>与其将数据仓库中的信息替换为整个在线交易数据库中的数据，联合会将先前加载的记录的主键与其相应的新记录相匹配，然后比较两个记录的数据部分以确定它们 已经改变了。 通过这种方式，只有添加，删除和更改的记录才会更新，这会显着减少数据库加载所花费的时间。 通过为CDC使用高性能连接，数据仓库更新可以以更高的效率执行。</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/">Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-18
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/"
+             data-title="Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <blockquote>
+<ul>
+<li>没什么干货，参考文献中的几篇有价值</li>
+<li>可以参考这篇文章关于etl基本术语的介绍</li>
+<li>snapshot difference技术 快照差分</li>
+</ul>
+</blockquote>
+<h2 id="用到的技术"><a href="#用到的技术" class="headerlink" title="用到的技术"></a>用到的技术</h2><blockquote>
+<p>The whole ETL process are performed using Pentaho Data Integration (PDI). Meanwhile, the proposed ETL process extract new and changed data using map-reduce framework and Apache Spoon. The transformation and loading process are performed using PDI. This section elaborates our big data cluster environment and the implementation of CDC.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>整个ETL过程使用Pentaho数据集成（PDI）执行。 同时，提议的ETL过程使用map-reduce框架和Apache Spoon提取新的和更改的数据。 转换和加载过程使用PDI执行。 本部分阐述了我们的大数据集群环境和CDC的实施。</p>
+</blockquote>
+<h2 id="mr的应用"><a href="#mr的应用" class="headerlink" title="mr的应用"></a>mr的应用</h2><blockquote>
+<p>The CDC method can be implemented using MapReduce by adopting the divide and conquer principle similar to that conducted in the study by [9]. The data are divided into several parts, each to be processed separately. Then, each data processed will enter the reduce phase which will detect changes in the data.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>CDC方法可以通过采用类似于[9]研究中进行的分而治之原则，使用MapReduce来实现。 数据分成几个部分，每个部分分别处理。 然后，每个处理的数据将进入减少阶段，这将检测数据的变化。</p>
+</blockquote>
+<h2 id="sprak-sql-的应用"><a href="#sprak-sql-的应用" class="headerlink" title="sprak sql 的应用"></a>sprak sql 的应用</h2><p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fqh59vdxk5j31ec0tkgra.jpg" alt=""></p>
+<blockquote>
+<p>In this study, the method used was by comparing data and finding differences between two data. The CDC method using snapshot difference was divided into several stages as illustrated in Figure 8. The first process was to take the data from the source. The data were taken by full load, which took the entire data from the beginning to the final condition. The results of the extraction was entered into the HDFS. The data was processed through the program created to run the CDC process using the snapshot difference technique. Snapshot difference was implemented <strong>using outer-join function from SparkSQL. The program was run by looking at the null value of the outer-join results of the two records, which will be the parameter for the newest data.</strong> If in the process damage to the data source was detected, the program could automatically change the data reference to compare and store the old data as a snapshot.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>在这项研究中，所使用的方法是通过比较数据和发现两个数据之间的差异。 使用快照差异的CDC方法分为几个阶段，如图8所示。第一个过程是从源头获取数据。 数据是以满负荷的方式获取的，这些数据从开始到最终的状态都采用了整个数据。 提取结果被输入到HDFS中。 数据通过创建的程序进行处理，以使用快照差异技术运行CDC进程。 快照差异是使用SparkSQL的外连接函数实现的。 该程序通过查看两条记录的外连接结果的空值来运行，这将成为最新数据的参数。 如果在检测到数据源损坏的过程中，程序可以自动更改数据引用以比较旧数据并将其存储为快照。</p>
+</blockquote>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2018/04/18/Hive环境搭建/">Hive环境搭建</a>
         
       </h1>
@@ -749,157 +975,6 @@
 </blockquote>
 <p>在Java Resource 中找到对应jar包，然后exclude<br>不知道是否正确</p>
 
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
-        </span>
-        
-        
-        <div class="post-visits"
-             data-url="/2018/04/11/Kylin2-0环境搭建/"
-             data-title="Kylin2.0环境搭建">
-            posts.visits
-          </div>
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <p>本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。</p>
-<hr>
-<p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
-<p>其他命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar cv0f spark-libs.jar -C $KYLIN_HOME/spark/jars/ .</span><br></pre></td></tr></table></figure></p>
-<hr>
-<p>如出现以下错误</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Failed to load keystore type JKS with pathconf/.keystore due to /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">java.io.FileNotFoundException: /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">       at java.io.FileInputStream.open(Native Method)</span><br></pre></td></tr></table></figure>
-<p>则去掉tomcat下的https<br>在kylin内置tomcat的server.xml中里边有个对https的支持没启用的话 注释掉</p>
-<hr>
-<p>自从spark2.0.0发布之后，每次启动hive的时候，总会发现一个小问题，启动 hive –service metastore的时候，会报一个小BUG: 无法访问/lib/spark-assembly-<em>.jar<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex19hd8jj30nm02tt8o.jpg" alt=""><br>分析其源码架构，发现主要原因是：在/bin/hive文件中，有这样的命令：加载spark中相关的JAR包。<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex1dwnb4j30ir0410sq.jpg" alt=""><br>但是spark升级到spark2以后，原有lib目录下的大JAR包被分散成多个小JAR包，原来的spark-assembly-</em>.jar已经不存在，所以hive没有办法找到这个JAR包。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">Failed with exceptionjava.io.IOException:java.lang.IllegalArgumentException:java.net.URISyntaxException: Relative path in absolute URI:$&#123;system:user.name&#125;</span><br><span class="line">Time taken: 0.193 seconds</span><br></pre></td></tr></table></figure>
-<p>解决办法：把下列system:删除</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;system:java.io.tmpdir&#125;/$&#123; system:user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
-<p>变成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;java.io.tmpdir&#125;/$&#123; user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
-<hr>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/项目总结-水环境管理系统/">项目总结-水环境管理系统</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
-        </span>
-        
-        
-        <div class="post-visits"
-             data-url="/2018/04/11/项目总结-水环境管理系统/"
-             data-title="项目总结-水环境管理系统">
-            posts.visits
-          </div>
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/项目总结-BI系统/">项目总结-BI系统</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
-        </span>
-        
-        
-        <div class="post-visits"
-             data-url="/2018/04/11/项目总结-BI系统/"
-             data-title="项目总结-BI系统">
-            posts.visits
-          </div>
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
         
       
     </div>

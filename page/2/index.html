@@ -165,6 +165,157 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2018/04/11/Kylin2-0环境搭建/">Kylin2.0环境搭建</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/11/Kylin2-0环境搭建/"
+             data-title="Kylin2.0环境搭建">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <p>本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。</p>
+<hr>
+<p>kylin相关组件启动命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ZOOKEEPER_HOME/bin/zkServer.sh start  </span><br><span class="line">$HADOOP_HOME/sbin/start-dfs.sh  </span><br><span class="line">$HADOOP_HOME/sbin/start-yarn.sh  </span><br><span class="line">$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  </span><br><span class="line">service mysqld start  </span><br><span class="line">nohup $HIVE_HOME/bin/hive --service metastore &gt; /tmp/hive_metastore.log 2&gt;&amp;1 &amp;  </span><br><span class="line">$HBASE_HOME/bin/start-hbase.sh</span><br><span class="line">$KYLIN_HOME/bin/kylin.sh start</span><br></pre></td></tr></table></figure></p>
+<p>其他命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar cv0f spark-libs.jar -C $KYLIN_HOME/spark/jars/ .</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>如出现以下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Failed to load keystore type JKS with pathconf/.keystore due to /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">java.io.FileNotFoundException: /home/hadoop/apache-kylin-2.0.0-bin/tomcat/conf/.keystore(没有那个文件或目录)</span><br><span class="line">       at java.io.FileInputStream.open(Native Method)</span><br></pre></td></tr></table></figure>
+<p>则去掉tomcat下的https<br>在kylin内置tomcat的server.xml中里边有个对https的支持没启用的话 注释掉</p>
+<hr>
+<p>自从spark2.0.0发布之后，每次启动hive的时候，总会发现一个小问题，启动 hive –service metastore的时候，会报一个小BUG: 无法访问/lib/spark-assembly-<em>.jar<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex19hd8jj30nm02tt8o.jpg" alt=""><br>分析其源码架构，发现主要原因是：在/bin/hive文件中，有这样的命令：加载spark中相关的JAR包。<br><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fqex1dwnb4j30ir0410sq.jpg" alt=""><br>但是spark升级到spark2以后，原有lib目录下的大JAR包被分散成多个小JAR包，原来的spark-assembly-</em>.jar已经不存在，所以hive没有办法找到这个JAR包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">Failed with exceptionjava.io.IOException:java.lang.IllegalArgumentException:java.net.URISyntaxException: Relative path in absolute URI:$&#123;system:user.name&#125;</span><br><span class="line">Time taken: 0.193 seconds</span><br></pre></td></tr></table></figure>
+<p>解决办法：把下列system:删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;system:java.io.tmpdir&#125;/$&#123; system:user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
+<p>变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive.exec.local.scratchdir</span><br><span class="line">$&#123;java.io.tmpdir&#125;/$&#123; user.name&#125;</span><br><span class="line">Localscratch space for Hive jobs</span><br></pre></td></tr></table></figure>
+<hr>
+
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-水环境管理系统/">项目总结-水环境管理系统</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/11/项目总结-水环境管理系统/"
+             data-title="项目总结-水环境管理系统">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2018/04/11/项目总结-BI系统/">项目总结-BI系统</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-11
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/11/项目总结-BI系统/"
+             data-title="项目总结-BI系统">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+
+        
+          <h2 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h2>
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2018/04/11/项目总结-OLAP系统/">项目总结-OLAP系统</a>
         
       </h1>

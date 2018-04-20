@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Pekey">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://yoursite.com/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "qjhxkQG6FwXDocEOjCFjSJXX-gzGzoHsz",
+      appKey: "l9zmzMJqV7WdUXj4PbIGEAzb"
+    });
+  </script>
+
+
+
+
+
+    <title> Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习 - Pekey </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Pekey</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Pekey</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-18
+        </span>
+        
+        
+        <div class="post-visits"
+             data-url="/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/"
+             data-title="Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习">
+            posts.visits
+          </div>
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用到的技术"><span class="toc-text">用到的技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mr的应用"><span class="toc-text">mr的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sprak-sql-的应用"><span class="toc-text">sprak sql 的应用</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <blockquote>
+<ul>
+<li>没什么干货，参考文献中的几篇有价值</li>
+<li>可以参考这篇文章关于etl基本术语的介绍</li>
+<li>snapshot difference技术 快照差分</li>
+</ul>
+</blockquote>
+<h2 id="用到的技术"><a href="#用到的技术" class="headerlink" title="用到的技术"></a>用到的技术</h2><blockquote>
+<p>The whole ETL process are performed using Pentaho Data Integration (PDI). Meanwhile, the proposed ETL process extract new and changed data using map-reduce framework and Apache Spoon. The transformation and loading process are performed using PDI. This section elaborates our big data cluster environment and the implementation of CDC.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>整个ETL过程使用Pentaho数据集成（PDI）执行。 同时，提议的ETL过程使用map-reduce框架和Apache Spoon提取新的和更改的数据。 转换和加载过程使用PDI执行。 本部分阐述了我们的大数据集群环境和CDC的实施。</p>
+</blockquote>
+<h2 id="mr的应用"><a href="#mr的应用" class="headerlink" title="mr的应用"></a>mr的应用</h2><blockquote>
+<p>The CDC method can be implemented using MapReduce by adopting the divide and conquer principle similar to that conducted in the study by [9]. The data are divided into several parts, each to be processed separately. Then, each data processed will enter the reduce phase which will detect changes in the data.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>CDC方法可以通过采用类似于[9]研究中进行的分而治之原则，使用MapReduce来实现。 数据分成几个部分，每个部分分别处理。 然后，每个处理的数据将进入减少阶段，这将检测数据的变化。</p>
+</blockquote>
+<h2 id="sprak-sql-的应用"><a href="#sprak-sql-的应用" class="headerlink" title="sprak sql 的应用"></a>sprak sql 的应用</h2><p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fqh59vdxk5j31ec0tkgra.jpg" alt=""></p>
+<blockquote>
+<p>In this study, the method used was by comparing data and finding differences between two data. The CDC method using snapshot difference was divided into several stages as illustrated in Figure 8. The first process was to take the data from the source. The data were taken by full load, which took the entire data from the beginning to the final condition. The results of the extraction was entered into the HDFS. The data was processed through the program created to run the CDC process using the snapshot difference technique. Snapshot difference was implemented <strong>using outer-join function from SparkSQL. The program was run by looking at the null value of the outer-join results of the two records, which will be the parameter for the newest data.</strong> If in the process damage to the data source was detected, the program could automatically change the data reference to compare and store the old data as a snapshot.</p>
+</blockquote>
+<p>翻译：</p>
+<blockquote>
+<p>在这项研究中，所使用的方法是通过比较数据和发现两个数据之间的差异。 使用快照差异的CDC方法分为几个阶段，如图8所示。第一个过程是从源头获取数据。 数据是以满负荷的方式获取的，这些数据从开始到最终的状态都采用了整个数据。 提取结果被输入到HDFS中。 数据通过创建的程序进行处理，以使用快照差异技术运行CDC进程。 快照差异是使用SparkSQL的外连接函数实现的。 该程序通过查看两条记录的外连接结果的空值来运行，这将成为最新数据的参数。 如果在检测到数据源损坏的过程中，程序可以自动更改数据引用以比较旧数据并将其存储为快照。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/04/18/Hive环境搭建/">
+        <span class="next-text nav-default">Hive环境搭建</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:pekeyli@qq.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="/PekeyLi" class="iconfont icon-weibo" title="weibo"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Pekey Li</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>
