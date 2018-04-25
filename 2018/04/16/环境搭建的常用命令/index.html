@@ -191,7 +191,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Spark-上传jar包"><span class="toc-text">Spark 上传jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Spark-上传jar包"><span class="toc-text">Spark 上传jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#时区修改"><span class="toc-text">时区修改</span></a></li></ol>
     </div>
   </div>
 
@@ -227,6 +227,9 @@
 </blockquote>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
 <p>chmod -R 777 ./spark</p>
+</blockquote>
+<h4 id="时区修改"><a href="#时区修改" class="headerlink" title="时区修改"></a>时区修改</h4><blockquote>
+<p>时区的配置文件是/etc/sysconfig/clock。用tzselect命令就可以修改这个配置文件，根据命令的提示进行修改就好了。<br>但是在实际工作中，发现这种方式是不能够使得服务器上的时间设置马上生效的，而且使用ntpdate去同步时间服务器也不能够更改时间。即使你使用了 date命令手工设置了时间的话，如果使用ntpdate去进行时间同步的话，时间又会被改动到原来的错误时区的时间。而生产的机器往往是非常重要的，不能够进行重启等操作。<br>如果要修改时区并且马上生效，可以更换/etc/localtime 文件来实现。比如修改时区为中国上海，那么就可以使用如下的命令来使得时区的更改生效。<br>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>然后最好使用下面的命令将更改写入bios。<br>hwclock</p>
 </blockquote>
 
       
