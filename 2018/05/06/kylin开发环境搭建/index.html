@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <meta name="description" content="">
-    <title>Pekey‘s Blog</title>
+    <title>kylin开发环境搭建 · Pekey‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -65,6 +65,8 @@
 
     <link rel="preload" href= /css/style.css?v=20180317 as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" type="text/css" href= /css/mobile.css?v=20180317 media="(max-width: 980px)"/>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         
     <link rel="icon" href= /assets/favicon.ico>
     <script>
@@ -175,14 +177,23 @@
 </head>
 
     
-        <body class="home-body">
+        <body class="post-body">
     
     
-<header class="header index-header">
+<header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Pekey‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">kylin开发环境搭建</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Pekey‘s Blog</a>
 </header>
@@ -203,17 +214,17 @@ height:50vh;
     <!-- 主页  -->
     
     
-    <!-- 文章页  -->
+    <!-- 404页  -->
             
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-placeholder"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Pekey‘s Blog
-            <!-- 文章页  -->
+            kylin开发环境搭建
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -221,12 +232,36 @@ height:50vh;
             <!-- 主页副标题  -->
             
             
-                卖马为生
-            
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/05/06</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
         
     </div>
 </div>
@@ -310,379 +345,53 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/05/06/kylin开发环境搭建/" >
-                
-                    <span>kylin开发环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                maven安装下载所需的文件http://maven.apache.org/download.cgi
-1234cd ~wget http://xenia.sote.hu/ftp/mirrors/www.apache.org/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gztar -xzvf apache-maven-3.2.5-bin.tar.gzln -s /root/apache-maven-3.2.5/bin/mvn /usr/bin/mvn
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="maven安装"><a href="#maven安装" class="headerlink" title="maven安装"></a>maven安装</h3><p>下载所需的文件<a href="http://maven.apache.org/download.cgi" target="_blank" rel="noopener">http://maven.apache.org/download.cgi</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">wget http://xenia.sote.hu/ftp/mirrors/www.apache.org/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz</span><br><span class="line">tar -xzvf apache-maven-3.2.5-bin.tar.gz</span><br><span class="line">ln -s /root/apache-maven-3.2.5/bin/mvn /usr/bin/mvn</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="nodejs安装"><a href="#nodejs安装" class="headerlink" title="nodejs安装"></a>nodejs安装</h3><p>下载所需的包文件，当下node的最新稳定版本为6.10.3 (具体可根据node的英文官网查看)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://npm.taobao.org/mirrors/node/v6.10.3/node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure></p>
+<p>然后对xz文件进行解压<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xz -d node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure></p>
+<p>对tar目录进行解压<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf node-v6.10.3-linux-x64.tar</span><br></pre></td></tr></table></figure></p>
+<p>返回根目录，对文件设置软连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /node-v6.10.3-linux-x64/bin/node /usr/local/bin/node</span><br></pre></td></tr></table></figure></p>
+<p>同样对npm也设置软连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /node-v6.10.3-linux-x64/bin/npm /usr/local/bin/npm</span><br></pre></td></tr></table></figure></p>
+<p>查看版本号是否安装成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure></p>
+<p>使用淘宝镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="Kylin编译"><a href="#Kylin编译" class="headerlink" title="Kylin编译"></a>Kylin编译</h3><p>First clone the Kylin project to your local:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/apache/kylin.git</span><br></pre></td></tr></table></figure></p>
+<p>or<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf apache-kylin-2.1.0-src.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>Install Kylin artifacts to the maven repo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean install -DskipTests</span><br></pre></td></tr></table></figure></p>
 
-nodejs安装下载所需的包文件，当下node的最新稳定版本为6.10...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/06</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/20/Kylin-Cube构建过程学习/" >
-                
-                    <span>Kylin Cube构建过程学习</span>
-            </a>
-            <div class="abstract-content">
-                参考文献：https://blog.bcmeng.com
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/04/20/Kylin-Cube构建过程学习/" title= Kylin Cube构建过程学习 >
+                    <div class="prevTitle">Kylin Cube构建过程学习</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
 
-MapReduce 计算引擎 批量计算Cube，其输入是Hive表，输出是HBase的KeyValue，整个构建过程主要包含以下6步：
-
-建立Hive的大宽表； （MapReduce计算）
-对需要字典编码的列计算列基数； （MapReduce计算）
-构建字典； （JobServer计算 or MapReduce计算）
-分层构建Cuboid； （MapReduce计算）
-将Cuboid转为HBase的KeyValue结构（HFile）； （MapReduce计算）
-元数据更新和垃圾回收。Cube Build流程
-
-CubeCont...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/20</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
+<!-- City版安装代码已完成 -->
     
     
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/20/Speeding-ETL-Processing-in-Data-Warehouses-Using-High-Performance-Joins-for-Changed-Data-Capture/" >
-                
-                    <span>Speeding ETL Processing in Data Warehouses Using High-Performance Joins for Changed Data Capture 论文学习</span>
-            </a>
-            <div class="abstract-content">
-                
-1.Join and 2.Aggregation – which will play an integral role during preprocessing as well in manipulating and consolidating data in a data warehouse.
+    <!--PC版-->
 
-翻译：
-
-1.加入和2.聚合 - 在预处理过程中以及在数据仓库中操纵和合并数据时，它们将扮演不可或缺的角色。
+    <!--PC版-->
 
 
-
-ETL systems move data from OLTP systems to a data warehouse, but they can also be used t...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/20</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
     
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/18/Implementation-of-Change-Data-Capture-in-ETL-Process-for-Data-Warehouse-Using-HDFS-and-Apache-Spark-论文学习/" >
-                
-                    <span>Implementation of Change Data Capture in ETL Process for Data Warehouse Using HDFS and Apache Spark 论文学习</span>
-            </a>
-            <div class="abstract-content">
-                
-
-没什么干货，参考文献中的几篇有价值
-可以参考这篇文章关于etl基本术语的介绍
-snapshot difference技术 快照差分
-
-
-用到的技术
-The whole ETL process are performed using Pentaho Data Integration (PDI). Meanwhile, the proposed ETL process extract new and changed data using map-reduce framework and Apache Spoon. The transformation and loading proces...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/18</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/18/Hive环境搭建/" >
-                
-                    <span>Hive环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                Mysql安装关闭selinux 服务
-
-vim /etc/selinux/config···SELINUX=disabled···
-
-卸载MariaDB
-
-查看当前安装的mariadb包： rpm -qa | grep mariadb强制卸载： rpm -e –nodeps mariadb-libs-5.5.44-2.el7.centos.x86_64
-
-查看是否已经安装了MySQL
-
-rpm -qa | grep -i mysqlfind / -name mysql
-
-删除分散mysql文件
-
-find / -name mysql / # whereis mysql
-
-删除配置文档
-...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/18</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/17/Spark-Java-API/" >
-                
-                    <span>Spark Java API</span>
-            </a>
-            <div class="abstract-content">
-                参考文献：http://lxw1234.comRDD如何创建　　　　首先创建JavaSparkContext对象实例sc
-1JavaSparkContext  sc = new JavaSparkContext(&quot;local&quot;,&quot;SparkTest&quot;);
-接受2个参数：第一个参数表示运行方式（local、yarn-client、yarn-standalone等）第二个参数表示应用名字
-
-直接从集合转化 sc.parallelize(List(1,2,3,4,5,6,7,8,9,10))从HDFS文件转化  sc.textFile(&quot;hdf...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/17</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/17/Hbase环境搭建/" >
-                
-                    <span>Hbase环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                配置过程
-hbase-env.sh
-
-1234export JAVA_HOME=/home/grid/jdk1.7.0_75  export HBASE_HOME=/home/grid/hbase  export HBASE_LOG_DIR=/tmp/grid/logs  export HBASE_MANAGES_ZK=true
-
-hbase-site.xml
-
-1234567891011121314151617181920212223242526&lt;configuration&gt;      &lt;property&gt;          &lt;name&gt;hbase....
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/17</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/17/Hadoop环境搭建/" >
-                
-                    <span>Hadoop环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                配置过程
-hadoop-env.sh
-12export JAVA_HOME=/opt/java/jdk1.7.0_80export HADOOP_PREFIX=/opt/hadoop-2.6.4
-
-core-site.xml
-12345678910&lt;configuration&gt;    &lt;property&gt;        &lt;name&gt;fs.defaultFS&lt;/name&gt;        &lt;value&gt;hdfs://master:9000&lt;/value&gt;    &lt;/property&gt;    &lt;prope...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/17</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/17/Spark环境搭建/" >
-                
-                    <span>Spark环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                配置过程进入 Spark 安装目录下的 conf 目录， 拷贝 spark-env.sh.template 到 spark-env.sh。1cp spark-env.sh.template spark-env.sh
-编辑 spark-env.sh，在其中添加以下配置信息：12345export SCALA_HOME=/opt/scala-2.11.8export JAVA_HOME=/opt/java/jdk1.7.0_80export SPARK_MASTER_IP=192.168.109.137export SPARK_WORKER_MEMORY=1gexport HADOOP_CO...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/17</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/16/环境搭建的常用命令/" >
-                
-                    <span>集群环境搭建的常用命令</span>
-            </a>
-            <div class="abstract-content">
-                关闭防火墙和SELinux
-关闭命令： service iptables stop永久关闭防火墙： chkconfig iptables off查看防火墙关闭状态:  service iptables status
-
-
-关闭selinux 服务vim /etc/selinux/config修改 SELINUX=disabled
-
-无密码登录
-ssh-keygen -t rsacat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keyschmod 600 ~/.ssh/authorized_keysssh localhost
-
-显示文件夹大小并...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/16</span>
-                </div>
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-                
-            </div>
-        </article>
-    
-    <!-- paginator  -->
-    
-    <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
-    </nav>
-    
+    <!-- 评论 -->
 </main>
             <!-- profile -->
-            
-            <div class="profile">
-    <img class="profile-avatar" src= /avatar/me.jpg >
-    <div class="profile-name">pekey</div>
-    
-    <div class="profile-signature">
-        莫把湖中倒影，错当漫天繁星
-    </div>
-    
-    
-    <div class="profile-social">
-        
-    
-        
-            
-                <a href="mailto:pekeyli@qq.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/pekeyli" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="/assets/example_qr.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-    </div>
-    
-    
-        <div class="friends">
-            <div>FRIENDS</div>
-            
-                
-                    <span>
-                        <a href= //www.whereareyou.site/ target="_black">老田</a>
-                    </span>
-                
-            
-                
-            
-                
-            
-        </div>
-    
-    
-        <div class="about-me">
-            <a href = "/about" >ABOUT ME</a>
-        </div>
-    
-</div>
             
         </div>
         <footer class="footer footer-unloaded">
@@ -753,6 +462,24 @@ ssh-keygen -t rsacat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keyschmod 600 
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#maven安装"><span class="toc-number">1.</span> <span class="toc-text">maven安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodejs安装"><span class="toc-number">2.</span> <span class="toc-text">nodejs安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kylin编译"><span class="toc-number">3.</span> <span class="toc-text">Kylin编译</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1132,6 +859,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
     
     </body>
 </html>
