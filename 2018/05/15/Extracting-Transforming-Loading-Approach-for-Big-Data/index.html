@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <meta name="description" content="">
-    <title>集群环境搭建的常用命令 · Pekey‘s Blog</title>
+    <title>Extracting Transforming Loading Approach for Big Data · Pekey‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -191,7 +191,7 @@
                 <a href="/" >Pekey‘s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">集群环境搭建的常用命令</a>
+                <a href="#" class="post-name">Extracting Transforming Loading Approach for Big Data</a>
             </div>
     </div>
     
@@ -223,7 +223,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            集群环境搭建的常用命令
+            Extracting Transforming Loading Approach for Big Data
             <!-- 404 -->
             
         </h1>
@@ -239,15 +239,9 @@ height:50vh;
         
             <!-- 文章页标签  -->
             
-                <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-            
             <div class="post-intro-meta">
                 <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                <span class="post-intro-time">2018/04/16</span>
+                <span class="post-intro-time">2018/05/15</span>
                 
                 <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                     <span class="iconfont-archer">&#xe602;</span>
@@ -353,56 +347,18 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h4 id="关闭防火墙和SELinux"><a href="#关闭防火墙和SELinux" class="headerlink" title="关闭防火墙和SELinux"></a>关闭防火墙和SELinux</h4><blockquote>
-<p><strong>关闭命令：</strong> service iptables stop<br><strong>永久关闭防火墙：</strong> chkconfig iptables off<br><strong>查看防火墙关闭状态:</strong>  service iptables status</p>
-</blockquote>
-<blockquote>
-<p>关闭selinux 服务<br>vim /etc/selinux/config<br>修改 SELINUX=disabled</p>
-</blockquote>
-<h4 id="无密码登录"><a href="#无密码登录" class="headerlink" title="无密码登录"></a>无密码登录</h4><blockquote>
-<p>ssh-keygen -t rsa<br>cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>chmod 600 ~/.ssh/authorized_keys<br>ssh localhost</p>
-</blockquote>
-<h4 id="显示文件夹大小并排序"><a href="#显示文件夹大小并排序" class="headerlink" title="显示文件夹大小并排序"></a>显示文件夹大小并排序</h4><blockquote>
-<p>du -h –max-depth=1 ./  | sort -n</p>
-</blockquote>
-<h4 id="将旧版本的jdk升级为新版本"><a href="#将旧版本的jdk升级为新版本" class="headerlink" title="将旧版本的jdk升级为新版本"></a>将旧版本的jdk升级为新版本</h4><blockquote>
-<p>sudo update-alternatives –install /usr/bin/java java /opt/soft/jdk/bin/java 300<br>sudo update-alternatives –install /usr/bin/javac javac /opt/soft/jdk/bin/javac 300<br>sudo update-alternatives –config java</p>
-</blockquote>
-<h4 id="ecilpse访问的权限设置"><a href="#ecilpse访问的权限设置" class="headerlink" title="ecilpse访问的权限设置"></a>ecilpse访问的权限设置</h4><blockquote>
-<p>groupadd supergroup # 添加supergroup组<br>useradd -g supergroup hadoop # 添加hadoop用户到supergroup组<br>hadoop fs -chmod 777 /</p>
-</blockquote>
-<h4 id="查看系统版本"><a href="#查看系统版本" class="headerlink" title="查看系统版本"></a>查看系统版本</h4><blockquote>
-<p><strong>其他系列</strong> cat /proc/version<br><strong>redhat系列</strong> cat /etc/redhat-release</p>
-</blockquote>
-<h4 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h4><blockquote>
-<p><strong>centos 6</strong><br>vim /etc/sysconfig/network<br>hostname yourhostname<br><strong>centos 7</strong><br>hostnamectl set-hostname yourhostname</p>
-</blockquote>
-<h4 id="Spark-上传jar包"><a href="#Spark-上传jar包" class="headerlink" title="Spark 上传jar包"></a>Spark 上传jar包</h4><blockquote>
-<p>/opt/moudles/spark-1.6.1/bin/spark-submit –class SparkWordCount sparkStudy.jar  –master=spark://192.168.20.171:7077</p>
-</blockquote>
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><blockquote>
-<p>chmod -R 777 ./spark</p>
-</blockquote>
-<h4 id="时区修改"><a href="#时区修改" class="headerlink" title="时区修改"></a>时区修改</h4><blockquote>
-<p>时区的配置文件是/etc/sysconfig/clock。用tzselect命令就可以修改这个配置文件，根据命令的提示进行修改就好了。<br>但是在实际工作中，发现这种方式是不能够使得服务器上的时间设置马上生效的，而且使用ntpdate去同步时间服务器也不能够更改时间。即使你使用了 date命令手工设置了时间的话，如果使用ntpdate去进行时间同步的话，时间又会被改动到原来的错误时区的时间。而生产的机器往往是非常重要的，不能够进行重启等操作。<br>如果要修改时区并且马上生效，可以更换/etc/localtime 文件来实现。比如修改时区为中国上海，那么就可以使用如下的命令来使得时区的更改生效。<br>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>然后最好使用下面的命令将更改写入bios。<br>hwclock</p>
-</blockquote>
-
+        
     </article>
     <!-- 前后页  -->
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/04/17/Spark环境搭建/" title= Spark环境搭建 >
-                    <div class="nextTitle">Spark环境搭建</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/04/11/SpagoBI5.2开发环境搭建/" title= SpagoBI5.2开发环境搭建 >
-                    <div class="prevTitle">SpagoBI5.2开发环境搭建</div>
+                <a href= "/2018/05/15/Incremental-ETL-Pipeline-Scheduling-for-Near-RealTime-Data-Warehouses/" title= Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses >
+                    <div class="prevTitle">Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses</div>
                 </a>
             
         </li>
@@ -508,7 +464,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭防火墙和SELinux"><span class="toc-number">1.</span> <span class="toc-text">关闭防火墙和SELinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无密码登录"><span class="toc-number">2.</span> <span class="toc-text">无密码登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#显示文件夹大小并排序"><span class="toc-number">3.</span> <span class="toc-text">显示文件夹大小并排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将旧版本的jdk升级为新版本"><span class="toc-number">4.</span> <span class="toc-text">将旧版本的jdk升级为新版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ecilpse访问的权限设置"><span class="toc-number">5.</span> <span class="toc-text">ecilpse访问的权限设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看系统版本"><span class="toc-number">6.</span> <span class="toc-text">查看系统版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改hostname"><span class="toc-number">7.</span> <span class="toc-text">修改hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Spark-上传jar包"><span class="toc-number">8.</span> <span class="toc-text">Spark 上传jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他"><span class="toc-number">9.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#时区修改"><span class="toc-number">10.</span> <span class="toc-text">时区修改</span></a></li></ol>
+        
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

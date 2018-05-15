@@ -315,16 +315,36 @@ height:50vh;
     
     
         <article class="index-post">
+            <a class="abstract-title" href = "/2018/05/15/Extracting-Transforming-Loading-Approach-for-Big-Data/" >
+                
+                    <span>Extracting Transforming Loading Approach for Big Data</span>
+            </a>
+            <div class="abstract-content">
+                
+            </div>
+            <div class="abstract-post-meta">
+                <!-- date  -->
+                <div class="abstract-date">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/15</span>
+                </div>
+                <!-- tags  -->
+                
+            </div>
+        </article>
+    
+    
+    
+        <article class="index-post">
             <a class="abstract-title" href = "/2018/05/15/Incremental-ETL-Pipeline-Scheduling-for-Near-RealTime-Data-Warehouses/" >
                 
                     <span>Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses</span>
             </a>
             <div class="abstract-content">
-                ##Abstract本文工作基于一种针对按需数据仓库维护的增量ETL管道流水线技术，通过管道并行性来同时执行一系列的维护工作，其中每一个维护工作都需要从源本地事务中提取一批增量元组并附带一个提交时间戳，然后计算最终的增量，使相关数据库达到最新的状态。
+                Abstract本文工作基于一种针对按需数据仓库维护的增量ETL管道流水线技术，通过管道并行性来同时执行一系列的维护工作，其中每一个维护工作都需要从源本地事务中提取一批增量元组并附带一个提交时间戳，然后计算最终的增量，使相关数据库达到最新的状态。
 每一个流水线操作都在一个独立的，不停止的线程中执行一个Job，每处理完一个任务，再新建一个新的。
 但是，要连续执行增量连接或维护缓慢变化的维度表，可以同时访问和更新相同的临时表或维表，这些操作可以在不同的作业上工作。如果没有正确的线程协调，可能会产生不一致问题。
 本文就将提出集中调度算法来解决这些问题。
-Introduction针对数据仓库...
+Introduction针对数据仓库实时...
             </div>
             <div class="abstract-post-meta">
                 <!-- date  -->
@@ -550,27 +570,6 @@ hadoop-env.sh
 
 core-site.xml
 12345678910&lt;configuration&gt;    &lt;property&gt;        &lt;name&gt;fs.defaultFS&lt;/name&gt;        &lt;value&gt;hdfs://master:9000&lt;/value&gt;    &lt;/property&gt;    &lt;prope...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/17</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/17/Spark环境搭建/" >
-                
-                    <span>Spark环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                配置过程进入 Spark 安装目录下的 conf 目录， 拷贝 spark-env.sh.template 到 spark-env.sh。1cp spark-env.sh.template spark-env.sh
-编辑 spark-env.sh，在其中添加以下配置信息：12345export SCALA_HOME=/opt/scala-2.11.8export JAVA_HOME=/opt/java/jdk1.7.0_80export SPARK_MASTER_IP=192.168.109.137export SPARK_WORKER_MEMORY=1gexport HADOOP_CO...
             </div>
             <div class="abstract-post-meta">
                 <!-- date  -->
@@ -970,7 +969,18 @@ core-site.xml
     
     
     
-    <div class="total-archive"> Total : 18 </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 19 </div>
     
     <div class="post-archive">
     
@@ -983,6 +993,11 @@ core-site.xml
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2018/05/15/Incremental-ETL-Pipeline-Scheduling-for-Near-RealTime-Data-Warehouses/" >Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href= "/2018/05/15/Extracting-Transforming-Loading-Approach-for-Big-Data/" >Extracting Transforming Loading Approach for Big Data</a>
         </li>
     
     
