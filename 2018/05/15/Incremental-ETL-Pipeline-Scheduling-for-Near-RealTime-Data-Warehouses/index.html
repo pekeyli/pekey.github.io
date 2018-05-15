@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <meta name="description" content="">
-    <title>Pekey‘s Blog</title>
+    <title>Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses · Pekey‘s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -65,6 +65,8 @@
 
     <link rel="preload" href= /css/style.css?v=20180317 as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" type="text/css" href= /css/mobile.css?v=20180317 media="(max-width: 980px)"/>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         
     <link rel="icon" href= /assets/favicon.ico>
     <script>
@@ -175,14 +177,23 @@
 </head>
 
     
-        <body class="home-body">
+        <body class="post-body">
     
     
-<header class="header index-header">
+<header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Pekey‘s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Pekey‘s Blog</a>
 </header>
@@ -203,17 +214,17 @@ height:50vh;
     <!-- 主页  -->
     
     
-    <!-- 文章页  -->
+    <!-- 404页  -->
             
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-placeholder"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Pekey‘s Blog
-            <!-- 文章页  -->
+            Incremental ETL Pipeline Scheduling for Near RealTime Data Warehouses
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -221,12 +232,36 @@ height:50vh;
             <!-- 主页副标题  -->
             
             
-                卖马为生
-            
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/05/15</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
         
     </div>
 </div>
@@ -310,303 +345,66 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>##Abstract<br>本文工作基于一种针对按需数据仓库维护的增量ETL管道流水线技术，通过管道并行性来同时执行一系列的维护工作，其中每一个维护工作都需要从源本地事务中提取一批增量元组并附带一个提交时间戳，然后计算最终的增量，使相关数据库达到最新的状态。</p>
+<p>每一个流水线操作都在一个独立的，不停止的线程中执行一个Job，每处理完一个任务，再新建一个新的。</p>
+<p>但是，要连续执行增量连接或维护缓慢变化的维度表，可以同时访问和更新相同的临时表或维表，这些操作可以在不同的作业上工作。如果没有正确的线程协调，可能会产生不一致问题。</p>
+<p>本文就将提出集中调度算法来解决这些问题。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>针对数据仓库实时分析的需求越来越多，不仅需要考虑效率，还要考虑数据的时效性。</p>
+<p>为了追求效率，增量ETL技术已经被广泛使用，从源表将增量传递到目标表，而不是从头开始计算。</p>
+<p>增量ETL类似于物化视图维护，不同之处在于视图维护作业被包含在内部事务中，以使物化视图在事务上与基表一致，而ETL流通常由外部工具执行而没有完全事务支持。</p>
+<p>本文的工作中，一旦有查询产生，会立即出发数据库维护操作，查询会被暂停，同时构建一个维护作业，并传播那些在查询到达时间之前具有提交时间戳但尚未与仓库表同步的源本地事务。 当仓库表更新到最新时，再重启查询操作。</p>
+<p>一系列查询的到来要求我们的ETL流程也需要一系列的维护工作，成这一系列工作为一个维护工作链，每个维护工作链都将相关仓库表带到特定查询所要求的正确状态。 为了提高效率，我们利用流水线并行性，并提出了增量ETL流水线的思想。<br><img src="https://ws2.sinaimg.cn/large/006tKfTcly1frbuled5fnj30n808xwfo.jpg" alt=""></p>
+<p>一个有向无环图 G(V, E)</p>
+<p>v ∈ V   ETL 传输操作</p>
+<p>e ∈ E   用来从提供者到接受者传递数据的内存通道</p>
+<p>ETL管道的来源是缓存的输入增量流。 每个数据流缓冲由独立变化数据捕获（CDC）进程捕获并按提交时间戳顺序维护。</p>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><p>目前存在的算法考虑执行时间、吞吐量和内存消耗<br>Ca03、KVS13、GJS12、TPL08</p>
+<h3 id="Operator-Thread-Coordination-amp-Synchronization"><a href="#Operator-Thread-Coordination-amp-Synchronization" class="headerlink" title="Operator Thread Coordination &amp; Synchronization"></a>Operator Thread Coordination &amp; Synchronization</h3><h4 id="Slowly-changing-dimension-SCD-3种"><a href="#Slowly-changing-dimension-SCD-3种" class="headerlink" title="Slowly changing dimension (SCD)  3种"></a>Slowly changing dimension (SCD)  3种</h4><p>Type 2 SCD 是保留所有历史维度的一种SCD，所以有很多行包含相同的business key来表示一条记录的历史，而每行记录还有一个unique surrogate key，在某一个特定时间内有效，而当前可用的版本，结束时间是null。</p>
+<p>当源表中的数据改变时，最近的一条数据被替代，null变为当前的时间，一个新行被添加。但是上一个surrogate key的行可能正在被用户查询<br><img src="https://ws2.sinaimg.cn/large/006tKfTcly1frbup5k4w2j30li0djwgs.jpg" alt=""></p>
+<p>异常因没有控制执行队列的三个读写操作进程引起，<br>item_sk-lookup in Flow 1 和 (update-I old, insert-I new) in Flow 2.</p>
+<h4 id="增量join中的潜在异常"><a href="#增量join中的潜在异常" class="headerlink" title="增量join中的潜在异常"></a>增量join中的潜在异常</h4><p>An incremental join is a logical operator which takes the deltas (insertions, deletions and updates) on two join tables as inputs and calculates target deltas for previously derived join results<br><img src="https://ws1.sinaimg.cn/large/006tKfTcly1frbuq46zp5j30gf01emx5.jpg" alt=""><br>a logical incremental join operator is mapped to three join operators plus two union operators.<br><img src="https://ws2.sinaimg.cn/large/006tKfTcly1frbuqr3oyjj30on0apq5c.jpg" alt=""></p>
+<h4 id="Consistency-zone"><a href="#Consistency-zone" class="headerlink" title="Consistency zone"></a>Consistency zone</h4><p>是原始流程图的一个子图。虽然他们经常操作shared mutable object，但他们也不必通过数据管道联通。</p>
+<p>一致性区域的概念与嵌套事务相似。</p>
+<h4 id="Pipelined-Slowly-Changing-Dimension"><a href="#Pipelined-Slowly-Changing-Dimension" class="headerlink" title="Pipelined Slowly Changing Dimension"></a>Pipelined Slowly Changing Dimension</h4><p>建立一个正确的全局序列化调度<br>CDC组件会首先跟踪source-local事务开始和提交的时间戳，并把他们映射成一个全局的时间戳，最后生成一个全局的序列。<br><img src="https://ws1.sinaimg.cn/large/006tKfTcly1frbusmmfvgj30mx091jsj.jpg" alt=""></p>
+<p>This strict execution sequence can be implemented by the (Java) wait/notify methods as a provider-consumer relationship<br>in order to guarantee the atomic execution of both update-Iold and insert-Inew at task level, a (Java) cyclic barrier5 object can be used here to let update-Iold wait to start a new task until insert-Inew completes the current one</p>
+<h4 id="Pipelined-Incremental-Join"><a href="#Pipelined-Incremental-Join" class="headerlink" title="Pipelined Incremental Join"></a>Pipelined Incremental Join</h4><p>包含两个一致性区域和一个外部的重复删除操作。<br>一致性区域同步一个维护Job上的读写线程，一个维护Job只有才所有相关线程都完成时，才可以开始执行。<br><img src="https://ws1.sinaimg.cn/large/006tKfTcly1frbutprxe8j30ls0bf0uc.jpg" alt=""></p>
+<h4 id="Consistency-Zone-Aware-Pipeline-Scheduling"><a href="#Consistency-Zone-Aware-Pipeline-Scheduling" class="headerlink" title="Consistency-Zone-Aware Pipeline Scheduling"></a>Consistency-Zone-Aware Pipeline Scheduling</h4><p>根据调度算法MINIMUM COST (MC) 描述，一个ETL工作流</p>
+<p>增量ETL pipline因一致性区域中很多线程的同步执行，所以效率是很低的</p>
+<p>其副作用使其看上去向堵塞操作，因此一致性区域中的操作应该被分组，(update-Rold, Rold ∆S), (∆R Sold, update-Sold)<br>这就是consistency-zone-aware MC</p>
+<h4 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h4><p>original MC and consistency-zone-aware       MC  TPC-DS benchmark<br>latencies of maintenance jobs            input delta streams have a low or high input ratio<br><img src="https://ws2.sinaimg.cn/large/006tKfTcly1frbuvh8vkjj30jr06jjs3.jpg" alt=""></p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/05/06/kylin开发环境搭建/" title= kylin开发环境搭建 >
+                    <div class="prevTitle">kylin开发环境搭建</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
     
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/16/环境搭建的常用命令/" >
-                
-                    <span>集群环境搭建的常用命令</span>
-            </a>
-            <div class="abstract-content">
-                关闭防火墙和SELinux
-关闭命令： service iptables stop永久关闭防火墙： chkconfig iptables off查看防火墙关闭状态:  service iptables status
+    <!--PC版-->
+
+    <!--PC版-->
 
 
-关闭selinux 服务vim /etc/selinux/config修改 SELINUX=disabled
-
-无密码登录
-ssh-keygen -t rsacat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keyschmod 600 ~/.ssh/authorized_keysssh localhost
-
-显示文件夹大小并...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/16</span>
-                </div>
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "linux">linux</a>
-    
-</div>
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/SpagoBI5.2开发环境搭建/" >
-                
-                    <span>SpagoBI5.2开发环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。
-
-本地运行SpagoBI时需要JDK1.8的运行环境。
-
-表图引擎模块的action
-
-Bichartengine/WEB-INF/conf/commons/actions.xml
-
-整个项目的Service
-
-Spagobi-core/src/it/eng/spagobi/wepp/service
-
-
-导入sql文件出错时
-12345mysql&gt; SET GLOBAL sql_mode = &apos;&apos;;   Query OK, 0 rows affected, 1 ...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "spagobi">spagobi</a>
-    
-</div>
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/Kylin2-0环境搭建/" >
-                
-                    <span>Kylin2.0环境搭建</span>
-            </a>
-            <div class="abstract-content">
-                本文暂不介绍kylin具体的搭建过程，而是将遇到的问题进行了总结，具体的搭建过程可能在后续进行更新。
-
-kylin相关组件启动命令12345678$ZOOKEEPER_HOME/bin/zkServer.sh start  $HADOOP_HOME/sbin/start-dfs.sh  $HADOOP_HOME/sbin/start-yarn.sh  $HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver  service mysqld start  nohup $HIVE_HOME/bin/hive --service...
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "kylin">kylin</a>
-    
-</div>
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/项目总结-水环境管理系统/" >
-                
-                    <span>项目总结-水环境管理系统</span>
-            </a>
-            <div class="abstract-content">
-                待更新
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/项目总结-BI系统/" >
-                
-                    <span>项目总结-BI系统</span>
-            </a>
-            <div class="abstract-content">
-                待更新
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/项目总结-OLAP系统/" >
-                
-                    <span>项目总结-OLAP系统</span>
-            </a>
-            <div class="abstract-content">
-                待更新
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/项目总结-离校未就业转换网站/" >
-                
-                    <span>项目总结-离校未就业网站</span>
-            </a>
-            <div class="abstract-content">
-                待更新
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2018/04/11/Hello World/" >
-                
-                    <span>Hello World</span>
-            </a>
-            <div class="abstract-content">
-                Hello World
-
-            </div>
-            <div class="abstract-post-meta">
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/11</span>
-                </div>
-                <!-- tags  -->
-                
-            </div>
-        </article>
-    
-    <!-- paginator  -->
-    
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
-    
+    <!-- 评论 -->
 </main>
             <!-- profile -->
-            
-            <div class="profile">
-    <img class="profile-avatar" src= /avatar/me.jpg >
-    <div class="profile-name">pekey</div>
-    
-    <div class="profile-signature">
-        莫把湖中倒影，错当漫天繁星
-    </div>
-    
-    
-    <div class="profile-social">
-        
-    
-        
-            
-                <a href="mailto:pekeyli@qq.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/pekeyli" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="/assets/example_qr.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-    </div>
-    
-    
-        <div class="friends">
-            <div>FRIENDS</div>
-            
-                
-                    <span>
-                        <a href= //www.whereareyou.site/ target="_black">老田</a>
-                    </span>
-                
-            
-                
-            
-                
-            
-        </div>
-    
-    
-        <div class="about-me">
-            <a href = "/about" >ABOUT ME</a>
-        </div>
-    
-</div>
             
         </div>
         <footer class="footer footer-unloaded">
@@ -677,6 +475,24 @@ kylin相关组件启动命令12345678$ZOOKEEPER_HOME/bin/zkServer.sh start  $HAD
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Related-Work"><span class="toc-number">2.</span> <span class="toc-text">Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Operator-Thread-Coordination-amp-Synchronization"><span class="toc-number">2.1.</span> <span class="toc-text">Operator Thread Coordination &amp; Synchronization</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Slowly-changing-dimension-SCD-3种"><span class="toc-number">2.1.1.</span> <span class="toc-text">Slowly changing dimension (SCD)  3种</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#增量join中的潜在异常"><span class="toc-number">2.1.2.</span> <span class="toc-text">增量join中的潜在异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Consistency-zone"><span class="toc-number">2.1.3.</span> <span class="toc-text">Consistency zone</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pipelined-Slowly-Changing-Dimension"><span class="toc-number">2.1.4.</span> <span class="toc-text">Pipelined Slowly Changing Dimension</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pipelined-Incremental-Join"><span class="toc-number">2.1.5.</span> <span class="toc-text">Pipelined Incremental Join</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Consistency-Zone-Aware-Pipeline-Scheduling"><span class="toc-number">2.1.6.</span> <span class="toc-text">Consistency-Zone-Aware Pipeline Scheduling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Experiments"><span class="toc-number">2.1.7.</span> <span class="toc-text">Experiments</span></a></li></ol></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1068,6 +884,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
     
     </body>
 </html>
